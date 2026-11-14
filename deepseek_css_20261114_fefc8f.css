@@ -1,0 +1,184 @@
+:root {
+  --bg: #f7f3e9;
+  --paper: #fffdf7;
+  --ink: #2b2118;
+  --accent: #8b5a2b;
+  --accent-light: #c9a36a;
+  --border: #e0d4bf;
+  --shadow: 0 8px 24px rgba(43, 33, 24, 0.12);
+  --radius: 16px;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  font-family: "Georgia", "Times New Roman", serif;
+  background: var(--bg);
+  color: var(--ink);
+  line-height: 1.6;
+}
+
+/* ── Верхня панель ── */
+.top-bar {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: rgba(43, 33, 24, 0.95);
+  color: #f7f3e9;
+  padding: 12px 24px;
+  backdrop-filter: blur(6px);
+}
+.top-bar h1 {
+  margin: 0;
+  font-size: 1.2rem;
+  font-weight: 600;
+}
+.top-bar .subtitle {
+  margin: 4px 0 0;
+  font-size: 0.85rem;
+  opacity: 0.8;
+}
+.progress-nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 8px;
+}
+.progress-nav a {
+  display: inline-block;
+  min-width: 28px;
+  padding: 2px 8px;
+  text-align: center;
+  font-size: 0.8rem;
+  color: #f7f3e9;
+  background: rgba(255,255,255,0.12);
+  border-radius: 6px;
+  text-decoration: none;
+  transition: background 0.2s;
+}
+.progress-nav a:hover { background: var(--accent); }
+
+/* ── Колода слайдів ── */
+.deck {
+  max-width: 900px;
+  margin: 32px auto 64px;
+  padding: 0 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+}
+
+.slide {
+  background: var(--paper);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 32px 36px;
+  scroll-margin-top: 140px;
+  animation: fadeIn 0.4s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.slide h2 {
+  margin-top: 0;
+  margin-bottom: 16px;
+  font-size: 1.5rem;
+  color: var(--accent);
+  border-bottom: 2px solid var(--accent-light);
+  padding-bottom: 8px;
+}
+
+.slide h3 {
+  margin: 18px 0 8px;
+  font-size: 1.1rem;
+  color: var(--accent);
+}
+
+.slide p, .slide li { font-size: 1rem; }
+
+.slide ul, .slide ol {
+  padding-left: 22px;
+  margin: 8px 0;
+}
+
+.slide li { margin-bottom: 6px; }
+
+/* ── Титульний слайд ── */
+.title-slide {
+  text-align: center;
+  padding: 64px 32px;
+  background: linear-gradient(135deg, #fffdf7 0%, #f0e6d2 100%);
+}
+.title-slide h2 {
+  font-size: 2rem;
+  border: none;
+  color: var(--ink);
+}
+.title-slide .meta { font-style: italic; opacity: 0.7; }
+.title-slide .author {
+  font-weight: bold;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
+/* ── Формули ── */
+.formula-slide .formula {
+  background: #faf5ea;
+  border-left: 4px solid var(--accent-light);
+  border-radius: 8px;
+  padding: 16px 20px;
+  margin-top: 12px;
+}
+.formula p {
+  margin: 6px 0;
+  font-family: "Cambria Math", "Georgia", serif;
+  font-size: 1.05rem;
+}
+
+/* ── Зображення ── */
+.img-block {
+  margin: 16px 0;
+  text-align: center;
+}
+.img-block img {
+  max-width: 100%;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+}
+.img-block figcaption {
+  margin-top: 6px;
+  font-size: 0.85rem;
+  opacity: 0.7;
+  font-style: italic;
+}
+.img-block .qr { max-width: 220px; }
+
+/* ── Крок ── */
+.step {
+  font-weight: bold;
+  color: var(--accent);
+  margin-top: 12px;
+}
+
+/* ── Футер ── */
+.footer {
+  text-align: center;
+  padding: 24px;
+  font-size: 0.85rem;
+  color: #7a6a58;
+  border-top: 1px solid var(--border);
+}
+
+/* ── Адаптивність ── */
+@media (max-width: 600px) {
+  .slide { padding: 24px 18px; }
+  .title-slide h2 { font-size: 1.4rem; }
+  .slide h2 { font-size: 1.2rem; }
+  .top-bar h1 { font-size: 1rem; }
+}
