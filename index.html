@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Математика</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            /* Світлий градієнтний фон */
+            background: linear-gradient(145deg, #f7f9fc 0%, #e9eef4 100%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Segoe UI', Roboto, system-ui, -apple-system, sans-serif;
+            text-align: center;
+        }
+
+        h1 {
+            font-size: clamp(3rem, 10vw, 6rem);
+            font-weight: 800;
+            color: #11314b;
+            text-shadow: 0 4px 15px rgba(0, 20, 40, 0.15);
+            letter-spacing: 0.05em;
+            margin-bottom: 20px;
+        }
+
+        h2 {
+            font-size: 2rem;
+            font-weight: 600;
+            color: #1e4b6b;
+            margin: 10px 0;
+        }
+
+        i {
+            font-style: italic;
+            font-weight: 400;
+            color: #3d7ea3;
+        }
+
+        /* Стилі для кнопки переходу */
+        .nav-button {
+            margin-top: 40px;
+            display: inline-block;
+            padding: 15px 40px;
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #ffffff;
+            background: linear-gradient(135deg, #1e4b6b, #3d7ea3);
+            text-decoration: none;
+            border-radius: 50px;
+            box-shadow: 0 10px 20px rgba(30, 75, 107, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .nav-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 25px rgba(30, 75, 107, 0.4);
+            background: linear-gradient(135deg, #11314b, #2d6a8f);
+        }
+
+        .nav-button:active {
+            transform: translateY(1px);
+            box-shadow: 0 5px 10px rgba(30, 75, 107, 0.3);
+        }
+    </style>
+</head>
+<body>
+    <h1>Математика</h1>
+    <h2>10 клас</h2>
+    <h2><i>Основний рівень</i></h2>
+
+    <!-- Кнопка переходу. Замініть "linijni_rivnjanna.html" на назву вашого файлу -->
+    <a href="урок.html" class="nav-button">Лінійні рівняння →</a>
+
+</body>
+</html>
