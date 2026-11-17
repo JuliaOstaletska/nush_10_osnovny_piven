@@ -1,1 +1,1176 @@
+<!DOCTYPE html>
+<html lang="uk" class="h-full">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Геометрія 7 клас | Суміжні та вертикальні кути. Паралельні прямі</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons CDN -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            50: '#f0f9ff',
+                            100: '#e0f2fe',
+                            500: '#0284c7',
+                            600: '#0284c7',
+                            700: '#0369a1',
+                            800: '#075985',
+                            900: '#0c4a6e',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* 3D Flip Card Custom CSS */
+        .perspective-1000 {
+            perspective: 1000px;
+        }
+        .transform-style-3d {
+            transform-style: preserve-3d;
+            transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .backface-hidden {
+            backface-visibility: hidden;
+            -webkit-backface-visibility: hidden;
+        }
+        .rotate-y-180 {
+            transform: rotateY(180deg);
+        }
+
+        /* Custom Scrollbars */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f5f9;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 9999px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+
+        @keyframes pulse-subtle {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.02); }
+        }
+        .pulse-once {
+            animation: pulse-subtle 0.3s ease-in-out;
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 font-sans min-h-full flex flex-col antialiased selection:bg-sky-500 selection:text-white">
+
+    <!-- Header Navigation -->
+    <header class="bg-slate-900 text-white border-b border-slate-800 sticky top-0 z-50 shadow-md">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <!-- Logo & Textbook Reference -->
+                <div class="flex items-center space-x-3">
+                    <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-sky-500 to-indigo-600 flex items-center justify-center text-white shadow-lg shadow-sky-500/30">
+                        <i class="fa-solid font-bold fa-shapes text-xl"></i>
+                    </div>
+                    <div>
+                        <h1 class="text-lg font-bold tracking-tight text-white flex items-center gap-2">
+                            Геометрія 7 клас
+                            <span class="text-xs font-medium px-2 py-0.5 rounded-full bg-sky-500/20 text-sky-300 border border-sky-500/30">А.Г. Мерзляк</span>
+                        </h1>
+                        <p class="text-xs text-slate-400 hidden sm:block">Суміжні та вертикальні кути. Паралельні прямі</p>
+                    </div>
+                </div>
+
+                <!-- Overall Progress Indicator -->
+                <div class="flex items-center gap-4">
+                    <div class="hidden md:flex flex-col items-end">
+                        <span class="text-xs text-slate-400 font-medium">Загальний прогрес</span>
+                        <span id="total-progress-text" class="text-sm font-bold text-sky-400">0%</span>
+                    </div>
+                    <div class="w-24 bg-slate-800 rounded-full h-2.5 overflow-hidden hidden md:block border border-slate-700">
+                        <div id="total-progress-bar" class="bg-gradient-to-r from-sky-400 to-emerald-400 h-2.5 rounded-full w-0 transition-all duration-500"></div>
+                    </div>
+                    <button onclick="resetAllProgress()" class="p-2 text-slate-400 hover:text-rose-400 transition-colors" title="Скинути весь прогрес">
+                        <i class="fa-solid fa-rotate-left"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Navigation Tabs -->
+        <div class="bg-slate-950/80 backdrop-blur border-t border-slate-800/80 px-4">
+            <div class="max-w-7xl mx-auto flex space-x-1 sm:space-x-2 overflow-x-auto py-2 no-scrollbar">
+                <button onclick="switchTab('flashcards')" id="tab-flashcards" class="nav-tab text-xs sm:text-sm font-semibold px-4 py-2 rounded-lg flex items-center gap-2 transition-all text-white bg-sky-600 shadow-sm whitespace-nowrap">
+                    <i class="fa-solid fa-clone text-sky-200"></i> Флеш-картки
+                </button>
+                <button onclick="switchTab('fillblanks')" id="tab-fillblanks" class="nav-tab text-xs sm:text-sm font-semibold px-4 py-2 rounded-lg flex items-center gap-2 transition-all text-slate-400 hover:text-white hover:bg-slate-800/60 whitespace-nowrap">
+                    <i class="fa-solid fa-pen-to-square"></i> Пропущені слова
+                </button>
+                <button onclick="switchTab('quiz')" id="tab-quiz" class="nav-tab text-xs sm:text-sm font-semibold px-4 py-2 rounded-lg flex items-center gap-2 transition-all text-slate-400 hover:text-white hover:bg-slate-800/60 whitespace-nowrap">
+                    <i class="fa-solid fa-circle-question"></i> Вікторина
+                </button>
+                <button onclick="switchTab('matching')" id="tab-matching" class="nav-tab text-xs sm:text-sm font-semibold px-4 py-2 rounded-lg flex items-center gap-2 transition-all text-slate-400 hover:text-white hover:bg-slate-800/60 whitespace-nowrap">
+                    <i class="fa-solid fa-puzzle-piece"></i> Відповідності
+                </button>
+                <button onclick="switchTab('visual')" id="tab-visual" class="nav-tab text-xs sm:text-sm font-semibold px-4 py-2 rounded-lg flex items-center gap-2 transition-all text-slate-400 hover:text-white hover:bg-slate-800/60 whitespace-nowrap">
+                    <i class="fa-solid fa-drafting-compass"></i> Схеми та Малюнки
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content Container -->
+    <main class="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
+
+        <!-- Notification Toast Box -->
+        <div id="toast" class="fixed bottom-5 right-5 z-50 transform translate-y-20 opacity-0 transition-all duration-300 pointer-events-none bg-slate-900 text-white px-5 py-3 rounded-xl shadow-2xl flex items-center gap-3 border border-slate-700">
+            <i id="toast-icon" class="fa-solid fa-circle-info text-sky-400 text-lg"></i>
+            <span id="toast-message" class="text-sm font-medium">Повідомлення</span>
+        </div>
+
+        <!-- MODULE 1: FLASHCARDS -->
+        <section id="module-flashcards" class="tab-content block space-y-6">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white p-5 rounded-2xl shadow-sm border border-slate-200">
+                <div>
+                    <h2 class="text-xl font-bold text-slate-900 flex items-center gap-2">
+                        <i class="fa-solid fa-layer-group text-sky-600"></i> Флеш-картки з геометрії
+                    </h2>
+                    <p class="text-xs sm:text-sm text-slate-500 mt-1">Натискайте на картку, щоб дізнатися означення або теорему з підручника.</p>
+                </div>
+                <!-- Card Stats -->
+                <div class="flex items-center gap-3 text-xs sm:text-sm">
+                    <span class="px-3 py-1.5 rounded-lg bg-emerald-50 text-emerald-700 border border-emerald-200 font-semibold flex items-center gap-1.5">
+                        <i class="fa-solid fa-circle-check"></i> Вивчено: <span id="fc-learned-count">0</span>
+                    </span>
+                    <span class="px-3 py-1.5 rounded-lg bg-amber-50 text-amber-700 border border-amber-200 font-semibold flex items-center gap-1.5">
+                        <i class="fa-solid fa-rotate text-amber-600"></i> Повторити: <span id="fc-review-count">0</span>
+                    </span>
+                </div>
+            </div>
+
+            <!-- Card View Area -->
+            <div class="max-w-xl mx-auto">
+                <div class="relative w-full h-80 perspective-1000 group cursor-pointer" onclick="flipCurrentCard()">
+                    <div id="flashcard-inner" class="w-full h-full transform-style-3d relative rounded-2xl shadow-lg border border-slate-200 bg-white">
+                        
+                        <!-- Front Face -->
+                        <div class="absolute inset-0 backface-hidden flex flex-col justify-between p-8 rounded-2xl bg-gradient-to-br from-white via-slate-50 to-sky-50/50">
+                            <div class="flex items-center justify-between text-xs font-semibold text-slate-400 uppercase tracking-wider">
+                                <span id="card-category" class="px-2.5 py-1 rounded-md bg-slate-200/60 text-slate-600">Поняття</span>
+                                <span class="flex items-center gap-1 text-sky-600"><i class="fa-solid fa-hand-pointer animate-pulse"></i> Клікніть для звороту</span>
+                            </div>
+                            <div class="text-center py-4">
+                                <h3 id="card-term" class="text-2xl sm:text-3xl font-extrabold text-slate-800 leading-snug">
+                                    Термін
+                                </h3>
+                            </div>
+                            <div class="text-center text-xs text-slate-400 font-medium">
+                                Картка <span id="card-current-index">1</span> з <span id="card-total-count">10</span>
+                            </div>
+                        </div>
+
+                        <!-- Back Face -->
+                        <div class="absolute inset-0 backface-hidden rotate-y-180 flex flex-col justify-between p-8 rounded-2xl bg-gradient-to-br from-slate-900 to-slate-800 text-white shadow-xl">
+                            <div class="flex items-center justify-between text-xs font-semibold text-slate-400 uppercase tracking-wider">
+                                <span class="text-sky-400 font-bold"><i class="fa-solid fa-book-open mr-1"></i> Означення / Властивість</span>
+                                <span class="text-slate-400"><i class="fa-solid fa-rotate-left"></i> Натисніть для лицьового боку</span>
+                            </div>
+                            <div class="my-auto overflow-y-auto max-h-48 text-center px-2">
+                                <p id="card-definition" class="text-base sm:text-lg text-slate-100 font-medium leading-relaxed">
+                                    Текст означення...
+                                </p>
+                            </div>
+                            <div class="text-center text-xs text-slate-400 font-mono">
+                                За матеріалами Мерзляк 7 кл.
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <!-- Controls & Status Buttons -->
+                <div class="mt-6 flex flex-col space-y-4">
+                    <!-- Status Actions -->
+                    <div class="flex items-center justify-center gap-3">
+                        <button onclick="markCardStatus('review', event)" class="flex-1 max-w-[180px] py-2.5 px-4 rounded-xl bg-amber-100 hover:bg-amber-200 text-amber-800 text-xs sm:text-sm font-bold flex items-center justify-center gap-2 transition-colors shadow-sm">
+                            <i class="fa-solid fa-clock-rotate-left"></i> Потрібно повторити
+                        </button>
+                        <button onclick="markCardStatus('learned', event)" class="flex-1 max-w-[180px] py-2.5 px-4 rounded-xl bg-emerald-500 hover:bg-emerald-600 text-white text-xs sm:text-sm font-bold flex items-center justify-center gap-2 transition-colors shadow-md shadow-emerald-500/20">
+                            <i class="fa-solid fa-check"></i> Знаю!
+                        </button>
+                    </div>
+
+                    <!-- Navigation controls -->
+                    <div class="flex items-center justify-between pt-2">
+                        <button onclick="prevCard()" class="py-2 px-5 rounded-xl bg-white hover:bg-slate-100 border border-slate-200 text-slate-700 font-semibold text-sm flex items-center gap-2 transition-all shadow-sm">
+                            <i class="fa-solid fa-chevron-left"></i> Назад
+                        </button>
+                        <button onclick="flipCurrentCard()" class="py-2 px-4 rounded-xl text-slate-500 hover:text-slate-800 font-medium text-xs sm:text-sm flex items-center gap-1.5 transition-colors">
+                            <i class="fa-solid fa-arrows-rotate"></i> Перевернути
+                        </button>
+                        <button onclick="nextCard()" class="py-2 px-5 rounded-xl bg-sky-600 hover:bg-sky-700 text-white font-semibold text-sm flex items-center gap-2 transition-all shadow-sm">
+                            Вперед <i class="fa-solid fa-chevron-right"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- MODULE 2: FILL IN THE BLANKS -->
+        <section id="module-fillblanks" class="tab-content hidden space-y-6">
+            <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                <div>
+                    <h2 class="text-xl font-bold text-slate-900 flex items-center gap-2">
+                        <i class="fa-solid fa-pen-ruler text-sky-600"></i> Вставте пропущені геометричні терміни та числа
+                    </h2>
+                    <p class="text-xs sm:text-sm text-slate-500 mt-1">Заповніть пропуски відповідними словами чи градусними мірами з теорем геометрії.</p>
+                </div>
+                <button onclick="checkFillBlanks()" class="px-5 py-2.5 rounded-xl bg-sky-600 hover:bg-sky-700 text-white font-bold text-sm shadow-md shadow-sky-600/20 flex items-center gap-2 transition-all">
+                    <i class="fa-solid fa-spell-check"></i> Перевірити відповіді
+                </button>
+            </div>
+
+            <div class="grid grid-cols-1 gap-4" id="fillblanks-container">
+                <!-- Sentences populated by JavaScript -->
+            </div>
+        </section>
+
+        <!-- MODULE 3: QUIZ -->
+        <section id="module-quiz" class="tab-content hidden space-y-6">
+            <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                <div>
+                    <h2 class="text-xl font-bold text-slate-900 flex items-center gap-2">
+                        <i class="fa-solid fa-clipboard-question text-sky-600"></i> Геометрична Вікторина
+                    </h2>
+                    <p class="text-xs sm:text-sm text-slate-500 mt-1">Оберіть одну правильну відповідь для кожного з питань нижче.</p>
+                </div>
+                <div class="flex items-center gap-3">
+                    <button onclick="resetQuiz()" class="px-4 py-2 rounded-xl border border-slate-200 bg-white hover:bg-slate-100 text-slate-600 text-xs font-semibold">
+                        <i class="fa-solid fa-rotate"></i> Скинути
+                    </button>
+                    <button onclick="submitQuiz()" class="px-5 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-sm shadow-md shadow-emerald-600/20 flex items-center gap-2 transition-all">
+                        <i class="fa-solid fa-paper-plane"></i> Завершити тест
+                    </button>
+                </div>
+            </div>
+
+            <!-- Quiz Result Card (Hidden by default) -->
+            <div id="quiz-result-banner" class="hidden p-6 rounded-2xl bg-gradient-to-r from-slate-900 to-slate-800 text-white shadow-xl flex flex-col sm:flex-row items-center justify-between gap-6 border border-slate-700">
+                <div class="flex items-center gap-5">
+                    <div id="quiz-badge-icon" class="w-16 h-16 rounded-2xl bg-sky-500/20 text-sky-400 border border-sky-500/30 flex items-center justify-center text-3xl font-extrabold">
+                        🏆
+                    </div>
+                    <div>
+                        <h3 id="quiz-score-title" class="text-xl font-bold text-white">Результат тестування</h3>
+                        <p id="quiz-score-subtitle" class="text-sm text-slate-300 mt-0.5">Ви відповіли правильно на <span id="quiz-correct-count" class="font-bold text-emerald-400">0</span> з <span id="quiz-total-count">6</span> питань.</p>
+                    </div>
+                </div>
+                <button onclick="resetQuiz()" class="px-6 py-2.5 rounded-xl bg-sky-500 hover:bg-sky-600 text-white font-bold text-sm transition-all shadow-lg shadow-sky-500/20 whitespace-nowrap">
+                    Пройти знову
+                </button>
+            </div>
+
+            <!-- Quiz Questions Container -->
+            <div id="quiz-questions-container" class="space-y-4">
+                <!-- Populated by JS -->
+            </div>
+        </section>
+
+        <!-- MODULE 4: MATCHING PAIRS -->
+        <section id="module-matching" class="tab-content hidden space-y-6">
+            <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                <div>
+                    <h2 class="text-xl font-bold text-slate-900 flex items-center gap-2">
+                        <i class="fa-solid fa-link text-sky-600"></i> Встановлення відповідностей
+                    </h2>
+                    <p class="text-xs sm:text-sm text-slate-500 mt-1">Оберіть елемент з лівого стовпчика, а потім натисніть відповідну властивість у правому стовпчику.</p>
+                </div>
+                <div class="flex items-center gap-3">
+                    <span class="text-xs sm:text-sm font-semibold text-slate-600 bg-slate-100 px-3 py-1.5 rounded-lg border border-slate-200">
+                        Знайдено пар: <span id="matching-score" class="text-sky-600 font-bold">0</span> / 6
+                    </span>
+                    <button onclick="resetMatching()" class="p-2 rounded-lg bg-slate-100 text-slate-600 hover:bg-slate-200 text-xs font-semibold">
+                        <i class="fa-solid fa-rotate"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Matching Interface Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Column A: Terms -->
+                <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200 space-y-3">
+                    <h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-4 flex items-center gap-2">
+                        <span class="w-6 h-6 rounded-full bg-sky-100 text-sky-700 flex items-center justify-center font-bold text-xs">A</span>
+                        Геометричні об’єкти / Поняття
+                    </h3>
+                    <div id="matching-col-left" class="space-y-2.5">
+                        <!-- Populated by JS -->
+                    </div>
+                </div>
+
+                <!-- Column B: Properties -->
+                <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200 space-y-3">
+                    <h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-4 flex items-center gap-2">
+                        <span class="w-6 h-6 rounded-full bg-indigo-100 text-indigo-700 flex items-center justify-center font-bold text-xs">Б</span>
+                        Властивості / Означення
+                    </h3>
+                    <div id="matching-col-right" class="space-y-2.5">
+                        <!-- Populated by JS -->
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- MODULE 5: VISUAL IDENTIFICATION WITH SVG -->
+        <section id="module-visual" class="tab-content hidden space-y-6">
+            <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200">
+                <h2 class="text-xl font-bold text-slate-900 flex items-center gap-2">
+                    <i class="fa-solid fa-eye text-sky-600"></i> Розпізнавання за малюнками
+                </h2>
+                <p class="text-xs sm:text-sm text-slate-500 mt-1">Визначте, яке саме геометричне поняття чи кут зображено на кожній черговій креслярській схемі.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="visual-cards-container">
+                <!-- Populated by JS with SVG Diagrams -->
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-slate-900 text-slate-400 border-t border-slate-800 text-xs py-6 mt-12">
+        <div class="max-w-7xl mx-auto px-4 text-center space-y-2">
+            <p class="font-medium text-slate-300">Інтерактивний довідник та практичний тренажер з геометрії (7 клас)</p>
+            <p>Розроблено відповідно до шкільної програми та матеріалів підручника (А.Г. Мерзляк, В.Б. Полонський, М.С. Якір).</p>
+        </div>
+    </footer>
+
+    <!-- JavaScript Logic -->
+    <script>
+        /* ==========================================================================
+           GLOBAL STATE & DATA STRUCTURES
+           ========================================================================== */
+
+        const DATA = {
+            // Module 1: Flashcards
+            flashcards: [
+                {
+                    term: "Суміжні кути",
+                    category: "Означення",
+                    definition: "Два кути називають суміжними, якщо в них одна сторона спільна, а дві інші є доповняльними променями. Сума суміжних кутів завжди дорівнює 180°."
+                },
+                {
+                    term: "Вертикальні кути",
+                    category: "Означення та теорема",
+                    definition: "Два кути називають вертикальними, якщо сторони одного кута є доповняльними променями сторін другого. Вертикальні кути завжди рівні між собою."
+                },
+                {
+                    term: "Паралельні прямі",
+                    category: "Означення",
+                    definition: "Дві прямі називають паралельними, якщо вони не перетинаються ні в кожній стороні площини. Позначаються символом || (наприклад, a || b)."
+                },
+                {
+                    term: "Перпендикулярні прямі",
+                    category: "Означення",
+                    definition: "Дві прямі називають перпендикулярними, якщо при їхньому перетині утворився прямий кут (90°). Позначаються символом ⊥ (наприклад, a ⊥ b)."
+                },
+                {
+                    term: "Бісектриса кута",
+                    category: "Означення",
+                    definition: "Промінь з початком у вершині кута, який ділить цей кут на два рівних кути."
+                },
+                {
+                    term: "Доповняльні промені",
+                    category: "Означення",
+                    definition: "Два промені, які мають спільний початок і лежать на одній прямій, називають доповняльними."
+                },
+                {
+                    term: "Різносторонні кути",
+                    category: "Властивість січної",
+                    definition: "Пара кутів, утворених при перетині двох прямих січною (наприклад, внутрішні різносторонні). При паралельних прямих різносторонні кути рівні."
+                },
+                {
+                    term: "Односторонні кути",
+                    category: "Властивість січної",
+                    definition: "Пара кутів при перетині двох прямих січною, що лежать з одного боку від січної. При паралельних прямих сума односторонніх кутів дорівнює 180°."
+                },
+                {
+                    term: "Відстань між паралельними прямими",
+                    category: "Означення",
+                    definition: "Відстань від будь-якої точки однієї з паралельних прямих до другої прямої (довжина перпендикуляра)."
+                },
+                {
+                    term: "Основна властивість довжини відрізка",
+                    category: "Аксіома",
+                    definition: "Якщо точка C є внутрішньою точкою відрізка AB, то відрізок AB дорівнює сумі відрізків AC і CB (AB = AC + CB)."
+                }
+            ],
+
+            // Module 2: Fill in the Blanks
+            fillBlanks: [
+                {
+                    id: 1,
+                    textBefore: "Сума суміжних кутів дорівнює ",
+                    answer: "180",
+                    textAfter: "°.",
+                    hint: "Вкажіть число градусів (наприклад, 180)",
+                    explanation: "Теорема 4.1: Сума суміжних кутів завжди дорівнює 180°."
+                },
+                {
+                    id: 2,
+                    textBefore: "Вертикальні кути між собою ",
+                    answer: "рівні",
+                    options: ["рівні", "перпендикулярні", "паралельні", "різні"],
+                    textAfter: ".",
+                    hint: "Оберіть правильну властивість",
+                    explanation: "Теорема 4.2: Вертикальні кути є рівними."
+                },
+                {
+                    id: 3,
+                    textBefore: "Дві прямі називають ",
+                    answer: "паралельними",
+                    options: ["паралельними", "суміжними", "перпендикулярними", "вертикальними"],
+                    textAfter: ", якщо вони не перетинаються.",
+                    hint: "Означення паралельних прямих",
+                    explanation: "Дві прямі на площині, які не мають спільних точок (не перетинаються), є паралельними."
+                },
+                {
+                    id: 4,
+                    textBefore: "Бісектрисою кута називають промінь, який ділить цей кут на два ",
+                    answer: "рівних",
+                    textAfter: " кути.",
+                    hint: "Введіть прикметник у множині (наприклад, рівних)",
+                    explanation: "Бісектриса ділить кут на два рівних за величиною кути."
+                },
+                {
+                    id: 5,
+                    textBefore: "Якщо точка C є внутрішньою точкою відрізка AB, то AB = AC + ",
+                    answer: "CB",
+                    textAfter: ".",
+                    hint: "Вкажіть позначення другого відрізка (CB або BC)",
+                    acceptAnswers: ["CB", "BC"],
+                    explanation: "Основна властивість довжини відрізка: довжина цілого дорівнює сумі частин."
+                },
+                {
+                    id: 6,
+                    textBefore: "Якщо дві паралельні прямі перетинаються січною, то сума односторонніх кутів дорівнює ",
+                    answer: "180",
+                    textAfter: "°.",
+                    hint: "Градусна міра суми односторонніх кутів",
+                    explanation: "Теорема 15.3: Якщо дві паралельні прямі перетинаються січною, то сума односторонніх кутів дорівнює 180°."
+                }
+            ],
+
+            // Module 3: Quiz Questions
+            quiz: [
+                {
+                    id: 1,
+                    question: "Кути α та β є суміжними. Якщо градусна міра кута α = 65°, чому дорівнює кут β?",
+                    options: ["65°", "115°", "90°", "180°"],
+                    correct: 1,
+                    explanation: "Сума суміжних кутів дорівнює 180°. Отже, β = 180° - 65° = 115°."
+                },
+                {
+                    id: 2,
+                    question: "При перетині двох прямих утворився кут мірою 40°. Чому дорівнює кут, вертикальний до нього?",
+                    options: ["140°", "50°", "40°", "90°"],
+                    correct: 2,
+                    explanation: "За теоремою 4.2 вертикальні кути рівні між собою, тому вертикальний кут також дорівнює 40°."
+                },
+                {
+                    id: 3,
+                    question: "Дві паралельні прямі перетинаються січною. Пара різносторонніх кутів у даному випадку є:",
+                    options: ["Рівними між собою", "У сумі дають 180°", "Перпендикулярними", "Завжди гострими"],
+                    correct: 0,
+                    explanation: "За теоремою 15.1, якщо дві паралельні прямі перетинаються січною, різносторонні кути рівні."
+                },
+                {
+                    id: 4,
+                    question: "Яка з наведених умов є ОЗНАКОЮ паралельності двох прямих?",
+                    options: ["Сума вертикальних кутів дорівнює 90°", "Різносторонні кути, утворені січною, є рівними", "Сума суміжних кутів дорівнює 180°", "Прямі перетинаються під гострим кутом"],
+                    correct: 1,
+                    explanation: "Теорема 14.1: Якщо різносторонні кути, утворені при перетині двох прямих січною, рівні, то прямі паралельні."
+                },
+                {
+                    id: 5,
+                    question: "Чому дорівнює кут між двома перпендикулярними прямими?",
+                    options: ["0°", "45°", "90°", "180°"],
+                    correct: 2,
+                    explanation: "За означенням, перпендикулярні прямі при перетині утворюють прямий кут, тобто 90°."
+                },
+                {
+                    id: 6,
+                    question: "Промінь OK є бісектрисою кута ∠AOC = 84°. Знайдіть градусну міру кута ∠AOK.",
+                    options: ["42°", "84°", "168°", "96°"],
+                    correct: 0,
+                    explanation: "Бісектриса ділить кут навпіл: ∠AOK = 84° / 2 = 42°."
+                }
+            ],
+
+            // Module 4: Matching Pairs
+            matchingPairs: [
+                { id: "m1", left: "Суміжні кути", right: "Сума градусних мір дорівнює 180°" },
+                { id: "m2", left: "Вертикальні кути", right: "Завжди рівні між собою" },
+                { id: "m3", left: "Різносторонні кути (при a || b)", right: "Рівні між собою" },
+                { id: "m4", left: "Односторонні кути (при a || b)", right: "Сума кутів дорівнює 180°" },
+                { id: "m5", left: "Перпендикулярні прямі", right: "Перетинаються під кутом 90°" },
+                { id: "m6", left: "Бісектриса кута", right: "Промінь, що ділить кут на дві рівні частини" }
+            ],
+
+            // Module 5: Visual Diagrams
+            visuals: [
+                {
+                    id: 1,
+                    title: "Малюнок №1",
+                    answer: "Суміжні кути",
+                    explanation: "Кути мають спільну сторону OC та доповняльні промені OA і OB, утворюючи розгорнутий кут.",
+                    svg: `<svg viewBox="0 0 240 140" class="w-full h-36">
+                        <line x1="20" y1="110" x2="220" y2="110" stroke="#334155" stroke-width="3" stroke-linecap="round" />
+                        <line x1="120" y1="110" x2="180" y2="25" stroke="#0284c7" stroke-width="3" stroke-linecap="round" />
+                        <circle cx="120" cy="110" r="4" fill="#0284c7" />
+                        <!-- Arc 1 -->
+                        <path d="M 150 110 A 30 30 0 0 0 137 87" fill="none" stroke="#e11d48" stroke-width="2" />
+                        <!-- Arc 2 -->
+                        <path d="M 137 87 A 30 30 0 0 0 90 110" fill="none" stroke="#16a34a" stroke-width="2" />
+                        <text x="30" y="100" font-size="12" font-weight="bold" fill="#475569">A</text>
+                        <text x="115" y="128" font-size="12" font-weight="bold" fill="#475569">O</text>
+                        <text x="210" y="100" font-size="12" font-weight="bold" fill="#475569">B</text>
+                        <text x="188" y="22" font-size="12" font-weight="bold" fill="#0284c7">C</text>
+                    </svg>`
+                },
+                {
+                    id: 2,
+                    title: "Малюнок №2",
+                    answer: "Вертикальні кути",
+                    explanation: "Дві прямі перетинаються в точці O. Протилежні кути утворені доповняльними променями і є рівними.",
+                    svg: `<svg viewBox="0 0 240 140" class="w-full h-36">
+                        <line x1="30" y1="30" x2="210" y2="110" stroke="#334155" stroke-width="3" stroke-linecap="round" />
+                        <line x1="30" y1="110" x2="210" y2="30" stroke="#334155" stroke-width="3" stroke-linecap="round" />
+                        <circle cx="120" cy="70" r="4" fill="#0284c7" />
+                        <!-- Left Arc -->
+                        <path d="M 92 57 A 30 30 0 0 0 92 83" fill="none" stroke="#0284c7" stroke-width="2.5" />
+                        <!-- Right Arc -->
+                        <path d="M 148 57 A 30 30 0 0 1 148 83" fill="none" stroke="#0284c7" stroke-width="2.5" />
+                        <text x="117" y="90" font-size="11" font-weight="bold" fill="#64748b">O</text>
+                    </svg>`
+                },
+                {
+                    id: 3,
+                    title: "Малюнок №3",
+                    answer: "Перпендикулярні прямі",
+                    explanation: "Прямі перетинаються під кутом 90°, що позначено відповідним квадратним маркером.",
+                    svg: `<svg viewBox="0 0 240 140" class="w-full h-36">
+                        <line x1="20" y1="70" x2="220" y2="70" stroke="#334155" stroke-width="3" stroke-linecap="round" />
+                        <line x1="120" y1="15" x2="120" y2="125" stroke="#334155" stroke-width="3" stroke-linecap="round" />
+                        <!-- Right angle square marker -->
+                        <rect x="120" y="52" width="18" height="18" fill="none" stroke="#e11d48" stroke-width="2" />
+                        <text x="210" y="62" font-size="12" font-weight="bold" fill="#0284c7">a</text>
+                        <text x="127" y="25" font-size="12" font-weight="bold" fill="#0284c7">b</text>
+                    </svg>`
+                },
+                {
+                    id: 4,
+                    title: "Малюнок №4",
+                    answer: "Різносторонні кути",
+                    explanation: "Внутрішні різносторонні кути при паралельних прямих a i b та січній c.",
+                    svg: `<svg viewBox="0 0 240 140" class="w-full h-36">
+                        <!-- Line a -->
+                        <line x1="20" y1="40" x2="220" y2="40" stroke="#334155" stroke-width="2.5" />
+                        <!-- Line b -->
+                        <line x1="20" y1="100" x2="220" y2="100" stroke="#334155" stroke-width="2.5" />
+                        <!-- Transversal c -->
+                        <line x1="60" y1="125" x2="180" y2="15" stroke="#0284c7" stroke-width="2.5" />
+                        <!-- Angle 1 arc -->
+                        <path d="M 133 58 A 20 20 0 0 1 153 40" fill="none" stroke="#e11d48" stroke-width="2.5" />
+                        <!-- Angle 2 arc -->
+                        <path d="M 107 82 A 20 20 0 0 1 87 100" fill="none" stroke="#e11d48" stroke-width="2.5" />
+                        <text x="210" y="32" font-size="12" font-weight="bold" fill="#475569">a</text>
+                        <text x="210" y="92" font-size="12" font-weight="bold" fill="#475569">b</text>
+                        <text x="185" y="20" font-size="12" font-weight="bold" fill="#0284c7">c</text>
+                    </svg>`
+                },
+                {
+                    id: 5,
+                    title: "Малюнок №5",
+                    answer: "Бісектриса кута",
+                    explanation: "Промінь OC ділить кут AOB на два рівних між собою кути AOC та COB.",
+                    svg: `<svg viewBox="0 0 240 140" class="w-full h-36">
+                        <line x1="40" y1="110" x2="200" y2="110" stroke="#334155" stroke-width="2.5" />
+                        <line x1="40" y1="110" x2="160" y2="20" stroke="#334155" stroke-width="2.5" />
+                        <!-- Bisector Ray -->
+                        <line x1="40" y1="110" x2="210" y2="65" stroke="#16a34a" stroke-width="3" stroke-dasharray="6 3" />
+                        <!-- Angle arcs with equal ticks -->
+                        <path d="M 90 110 A 50 50 0 0 0 83 95" fill="none" stroke="#16a34a" stroke-width="2" />
+                        <path d="M 83 95 A 50 50 0 0 0 74 74" fill="none" stroke="#16a34a" stroke-width="2" />
+                        <text x="30" y="125" font-size="12" font-weight="bold" fill="#475569">O</text>
+                        <text x="210" y="125" font-size="12" font-weight="bold" fill="#475569">B</text>
+                        <text x="165" y="18" font-size="12" font-weight="bold" fill="#475569">A</text>
+                        <text x="215" y="62" font-size="12" font-weight="bold" fill="#16a34a">C</text>
+                    </svg>`
+                }
+            ]
+        };
+
+        // User State Tracking
+        let state = {
+            currentTab: 'flashcards',
+            flashcards: {
+                currentIndex: 0,
+                status: {}, // cardIndex: 'learned' | 'review'
+                isFlipped: false
+            },
+            quiz: {
+                userAnswers: {} // questionId: optionIndex
+            },
+            matching: {
+                selectedLeft: null,
+                paired: {} // leftId: rightId
+            },
+            visual: {
+                userAnswers: {}
+            }
+        };
+
+        /* ==========================================================================
+           CORE TAB NAVIGATION & UTILS
+           ========================================================================== */
+
+        function switchTab(tabId) {
+            state.currentTab = tabId;
+
+            // Hide all tab content
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+            
+            // Show selected tab content
+            const activeContent = document.getElementById(`module-${tabId}`);
+            if (activeContent) activeContent.classList.remove('hidden');
+
+            // Update Navigation Buttons Styling
+            document.querySelectorAll('.nav-tab').forEach(btn => {
+                btn.className = "nav-tab text-xs sm:text-sm font-semibold px-4 py-2 rounded-lg flex items-center gap-2 transition-all text-slate-400 hover:text-white hover:bg-slate-800/60 whitespace-nowrap";
+            });
+
+            const activeBtn = document.getElementById(`tab-${tabId}`);
+            if (activeBtn) {
+                activeBtn.className = "nav-tab text-xs sm:text-sm font-semibold px-4 py-2 rounded-lg flex items-center gap-2 transition-all text-white bg-sky-600 shadow-sm whitespace-nowrap";
+            }
+
+            updateTotalProgress();
+        }
+
+        function showToast(message, type = 'info') {
+            const toast = document.getElementById('toast');
+            const toastMsg = document.getElementById('toast-message');
+            const toastIcon = document.getElementById('toast-icon');
+
+            toastMsg.innerText = message;
+            
+            if (type === 'success') {
+                toastIcon.className = "fa-solid fa-circle-check text-emerald-400 text-lg";
+            } else if (type === 'error') {
+                toastIcon.className = "fa-solid fa-triangle-exclamation text-rose-400 text-lg";
+            } else {
+                toastIcon.className = "fa-solid fa-circle-info text-sky-400 text-lg";
+            }
+
+            toast.classList.remove('translate-y-20', 'opacity-0');
+            toast.classList.add('translate-y-0', 'opacity-100');
+
+            setTimeout(() => {
+                toast.classList.remove('translate-y-0', 'opacity-100');
+                toast.classList.add('translate-y-20', 'opacity-0');
+            }, 3000);
+        }
+
+        function updateTotalProgress() {
+            // Compute combined progress score from all modules
+            const flashcardLearned = Object.values(state.flashcards.status).filter(s => s === 'learned').length;
+            const fcProgress = (flashcardLearned / DATA.flashcards.length) * 20; // 20% weight
+
+            const matchingCount = Object.keys(state.matching.paired).length;
+            const matchProgress = (matchingCount / DATA.matchingPairs.length) * 20; // 20% weight
+
+            const quizAnswered = Object.keys(state.quiz.userAnswers).length;
+            const quizProgress = (quizAnswered / DATA.quiz.length) * 20; // 20% weight
+
+            const visualAnswered = Object.keys(state.visual.userAnswers).length;
+            const visualProgress = (visualAnswered / DATA.visuals.length) * 20; // 20% weight
+
+            // Fill blanks checking count
+            let filledCount = 0;
+            DATA.fillBlanks.forEach(item => {
+                const el = document.getElementById(`fb-input-${item.id}`);
+                if (el && el.value.trim() !== '') filledCount++;
+            });
+            const fbProgress = (filledCount / DATA.fillBlanks.length) * 20; // 20% weight
+
+            const total = Math.round(fcProgress + matchProgress + quizProgress + visualProgress + fbProgress);
+
+            document.getElementById('total-progress-text').innerText = `${total}%`;
+            document.getElementById('total-progress-bar').style.width = `${total}%`;
+        }
+
+        function resetAllProgress() {
+            state.flashcards.status = {};
+            state.flashcards.currentIndex = 0;
+            state.quiz.userAnswers = {};
+            state.matching.paired = {};
+            state.matching.selectedLeft = null;
+            state.visual.userAnswers = {};
+
+            renderFlashcard();
+            renderQuiz();
+            renderMatching();
+            renderVisuals();
+            renderFillBlanks();
+
+            document.getElementById('quiz-result-banner').classList.add('hidden');
+            showToast('Увесь прогрес успішно скинуто!', 'info');
+            updateTotalProgress();
+        }
+
+        /* ==========================================================================
+           MODULE 1: FLASHCARDS LOGIC
+           ========================================================================== */
+
+        function renderFlashcard() {
+            const card = DATA.flashcards[state.flashcards.currentIndex];
+            const inner = document.getElementById('flashcard-inner');
+            
+            // Ensure flipped off on card change
+            state.flashcards.isFlipped = false;
+            inner.classList.remove('rotate-y-180');
+
+            document.getElementById('card-term').innerText = card.term;
+            document.getElementById('card-definition').innerText = card.definition;
+            document.getElementById('card-category').innerText = card.category;
+            document.getElementById('card-current-index').innerText = state.flashcards.currentIndex + 1;
+            document.getElementById('card-total-count').innerText = DATA.flashcards.length;
+
+            // Counters
+            const learned = Object.values(state.flashcards.status).filter(s => s === 'learned').length;
+            const review = Object.values(state.flashcards.status).filter(s => s === 'review').length;
+            document.getElementById('fc-learned-count').innerText = learned;
+            document.getElementById('fc-review-count').innerText = review;
+        }
+
+        function flipCurrentCard() {
+            const inner = document.getElementById('flashcard-inner');
+            state.flashcards.isFlipped = !state.flashcards.isFlipped;
+            if (state.flashcards.isFlipped) {
+                inner.classList.add('rotate-y-180');
+            } else {
+                inner.classList.remove('rotate-y-180');
+            }
+        }
+
+        function nextCard() {
+            state.flashcards.currentIndex = (state.flashcards.currentIndex + 1) % DATA.flashcards.length;
+            renderFlashcard();
+        }
+
+        function prevCard() {
+            state.flashcards.currentIndex = (state.flashcards.currentIndex - 1 + DATA.flashcards.length) % DATA.flashcards.length;
+            renderFlashcard();
+        }
+
+        function markCardStatus(status, event) {
+            if (event) event.stopPropagation();
+            state.flashcards.status[state.flashcards.currentIndex] = status;
+            
+            if (status === 'learned') {
+                showToast('Поняття позначено як вивчене! 🎉', 'success');
+            } else {
+                showToast('Додано до списку для повторення 🔄', 'info');
+            }
+
+            renderFlashcard();
+            updateTotalProgress();
+            setTimeout(nextCard, 300);
+        }
+
+        /* ==========================================================================
+           MODULE 2: FILL IN THE BLANKS LOGIC
+           ========================================================================== */
+
+        function renderFillBlanks() {
+            const container = document.getElementById('fillblanks-container');
+            container.innerHTML = '';
+
+            DATA.fillBlanks.forEach((item, idx) => {
+                const card = document.createElement('div');
+                card.className = "bg-white p-5 rounded-2xl shadow-sm border border-slate-200 transition-all space-y-3";
+                card.id = `fb-card-${item.id}`;
+
+                let inputHTML = '';
+                if (item.options) {
+                    inputHTML = `
+                        <select id="fb-input-${item.id}" onchange="updateTotalProgress()" class="mx-1 px-3 py-1.5 rounded-lg border border-slate-300 bg-slate-50 text-slate-800 font-bold text-sm sm:text-base focus:outline-none focus:ring-2 focus:ring-sky-500">
+                            <option value="">-- обрати --</option>
+                            ${item.options.map(opt => `<option value="${opt}">${opt}</option>`).join('')}
+                        </select>
+                    `;
+                } else {
+                    inputHTML = `
+                        <input type="text" id="fb-input-${item.id}" oninput="updateTotalProgress()" placeholder="..." class="mx-1 px-3 py-1.5 w-28 text-center rounded-lg border border-slate-300 bg-slate-50 text-slate-800 font-bold text-sm sm:text-base focus:outline-none focus:ring-2 focus:ring-sky-500" />
+                    `;
+                }
+
+                card.innerHTML = `
+                    <div class="flex items-start gap-3">
+                        <span class="w-7 h-7 rounded-lg bg-sky-100 text-sky-700 flex items-center justify-center font-bold text-xs shrink-0 mt-0.5">
+                            ${idx + 1}
+                        </span>
+                        <div class="text-base font-medium text-slate-800 leading-relaxed flex-grow">
+                            ${item.textBefore} ${inputHTML} ${item.textAfter}
+                        </div>
+                        <div id="fb-status-${item.id}" class="shrink-0 text-xl"></div>
+                    </div>
+                    <div id="fb-explanation-${item.id}" class="hidden text-xs sm:text-sm p-3 rounded-xl bg-slate-50 border border-slate-200 text-slate-600 mt-2">
+                        <i class="fa-solid fa-circle-info text-sky-500 mr-1"></i> ${item.explanation}
+                    </div>
+                `;
+
+                container.appendChild(card);
+            });
+        }
+
+        function checkFillBlanks() {
+            let correctCount = 0;
+
+            DATA.fillBlanks.forEach(item => {
+                const inputEl = document.getElementById(`fb-input-${item.id}`);
+                const statusEl = document.getElementById(`fb-status-${item.id}`);
+                const expEl = document.getElementById(`fb-explanation-${item.id}`);
+                const val = inputEl.value.trim().toLowerCase();
+
+                let isCorrect = false;
+                if (item.acceptAnswers) {
+                    isCorrect = item.acceptAnswers.map(a => a.toLowerCase()).includes(val);
+                } else {
+                    isCorrect = (val === item.answer.toLowerCase());
+                }
+
+                expEl.classList.remove('hidden');
+
+                if (isCorrect) {
+                    correctCount++;
+                    statusEl.innerHTML = '<i class="fa-solid fa-circle-check text-emerald-500"></i>';
+                    inputEl.className = inputEl.className.replace(/border-slate-300|border-rose-400/, 'border-emerald-500 bg-emerald-50 text-emerald-900');
+                } else {
+                    statusEl.innerHTML = '<i class="fa-solid fa-circle-xmark text-rose-500"></i>';
+                    inputEl.className = inputEl.className.replace(/border-slate-300|border-emerald-500/, 'border-rose-400 bg-rose-50 text-rose-900');
+                }
+            });
+
+            if (correctCount === DATA.fillBlanks.length) {
+                showToast(`Чудово! Всі ${correctCount} пропусків заповнено вірно! 🏆`, 'success');
+            } else {
+                showToast(`Правильно заповнено: ${correctCount} з ${DATA.fillBlanks.length}. Ознайомтеся з підказками.`, 'info');
+            }
+
+            updateTotalProgress();
+        }
+
+        /* ==========================================================================
+           MODULE 3: QUIZ LOGIC
+           ========================================================================== */
+
+        function renderQuiz() {
+            const container = document.getElementById('quiz-questions-container');
+            container.innerHTML = '';
+
+            DATA.quiz.forEach((q, qIndex) => {
+                const card = document.createElement('div');
+                card.className = "bg-white p-5 sm:p-6 rounded-2xl shadow-sm border border-slate-200 space-y-4";
+                card.id = `quiz-card-${q.id}`;
+
+                const optionsHTML = q.options.map((opt, optIndex) => {
+                    const isSelected = state.quiz.userAnswers[q.id] === optIndex;
+                    return `
+                        <label onclick="selectQuizOption(${q.id}, ${optIndex})" class="flex items-center p-3 sm:p-3.5 rounded-xl border transition-all cursor-pointer ${isSelected ? 'border-sky-500 bg-sky-50/70 text-sky-950 font-semibold shadow-sm' : 'border-slate-200 hover:border-slate-300 hover:bg-slate-50 text-slate-700'}">
+                            <input type="radio" name="quiz-${q.id}" ${isSelected ? 'checked' : ''} class="w-4 h-4 text-sky-600 focus:ring-sky-500 border-slate-300">
+                            <span class="ml-3 text-sm sm:text-base">${opt}</span>
+                        </label>
+                    `;
+                }).join('');
+
+                card.innerHTML = `
+                    <div class="flex items-start gap-3">
+                        <span class="w-7 h-7 rounded-lg bg-sky-600 text-white flex items-center justify-center font-bold text-xs shrink-0 mt-0.5">
+                            ${qIndex + 1}
+                        </span>
+                        <h3 class="text-base sm:text-lg font-bold text-slate-900 leading-snug">
+                            ${q.question}
+                        </h3>
+                    </div>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5 pt-1">
+                        ${optionsHTML}
+                    </div>
+                    <div id="quiz-exp-${q.id}" class="hidden text-xs sm:text-sm p-3.5 rounded-xl bg-slate-50 border border-slate-200 text-slate-700 space-y-1">
+                        <div class="font-bold flex items-center gap-1.5 text-slate-900">
+                            <i class="fa-solid fa-lightbulb text-amber-500"></i> Пояснення:
+                        </div>
+                        <p>${q.explanation}</p>
+                    </div>
+                `;
+
+                container.appendChild(card);
+            });
+        }
+
+        function selectQuizOption(qId, optionIdx) {
+            state.quiz.userAnswers[qId] = optionIdx;
+            renderQuiz();
+            updateTotalProgress();
+        }
+
+        function submitQuiz() {
+            const total = DATA.quiz.length;
+            let correct = 0;
+
+            DATA.quiz.forEach(q => {
+                const userAns = state.quiz.userAnswers[q.id];
+                const expEl = document.getElementById(`quiz-exp-${q.id}`);
+                const cardEl = document.getElementById(`quiz-card-${q.id}`);
+
+                if (expEl) expEl.classList.remove('hidden');
+
+                if (userAns !== undefined) {
+                    if (userAns === q.correct) {
+                        correct++;
+                        if (cardEl) cardEl.className = "bg-emerald-50/40 p-5 sm:p-6 rounded-2xl shadow-sm border border-emerald-300 space-y-4";
+                    } else {
+                        if (cardEl) cardEl.className = "bg-rose-50/40 p-5 sm:p-6 rounded-2xl shadow-sm border border-rose-300 space-y-4";
+                    }
+                }
+            });
+
+            // Show Result Banner
+            const banner = document.getElementById('quiz-result-banner');
+            document.getElementById('quiz-correct-count').innerText = correct;
+            document.getElementById('quiz-total-count').innerText = total;
+
+            const iconEl = document.getElementById('quiz-badge-icon');
+            const titleEl = document.getElementById('quiz-score-title');
+
+            if (correct === total) {
+                iconEl.innerText = "🏆";
+                titleEl.innerText = "Ідеальний результат! Відмінно!";
+            } else if (correct >= total / 2) {
+                iconEl.innerText = "🌟";
+                titleEl.innerText = "Гарний результат! Майже без помилок.";
+            } else {
+                iconEl.innerText = "📚";
+                titleEl.innerText = "Потрібно ще трохи повторити матеріал.";
+            }
+
+            banner.classList.remove('hidden');
+            banner.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            showToast(`Тестування завершено! Ваш результат: ${correct}/${total}`, 'success');
+            updateTotalProgress();
+        }
+
+        function resetQuiz() {
+            state.quiz.userAnswers = {};
+            document.getElementById('quiz-result-banner').classList.add('hidden');
+            renderQuiz();
+            updateTotalProgress();
+        }
+
+        /* ==========================================================================
+           MODULE 4: MATCHING PAIRS LOGIC
+           ========================================================================== */
+
+        function renderMatching() {
+            const leftContainer = document.getElementById('matching-col-left');
+            const rightContainer = document.getElementById('matching-col-right');
+
+            leftContainer.innerHTML = '';
+            rightContainer.innerHTML = '';
+
+            // Render Left Items (Terms)
+            DATA.matchingPairs.forEach(pair => {
+                const isPaired = !!state.matching.paired[pair.id];
+                const isSelected = state.matching.selectedLeft === pair.id;
+
+                const btn = document.createElement('button');
+                btn.disabled = isPaired;
+                btn.onclick = () => selectMatchingLeft(pair.id);
+
+                let btnClass = "w-full text-left p-3.5 rounded-xl border text-xs sm:text-sm font-semibold transition-all flex items-center justify-between ";
+                if (isPaired) {
+                    btnClass += "border-emerald-300 bg-emerald-50 text-emerald-800 opacity-75 cursor-default";
+                } else if (isSelected) {
+                    btnClass += "border-sky-500 bg-sky-50 text-sky-900 ring-2 ring-sky-400/50 shadow-sm";
+                } else {
+                    btnClass += "border-slate-200 hover:border-slate-300 bg-slate-50 hover:bg-slate-100 text-slate-800";
+                }
+
+                btn.className = btnClass;
+                btn.innerHTML = `
+                    <span>${pair.left}</span>
+                    ${isPaired ? '<i class="fa-solid fa-link text-emerald-600"></i>' : (isSelected ? '<i class="fa-solid fa-hand-pointer text-sky-500 animate-pulse"></i>' : '')}
+                `;
+
+                leftContainer.appendChild(btn);
+            });
+
+            // Render Right Items (Shuffled order for matching challenge)
+            // Keep deterministic order based on pair id to prevent layout shifting
+            const rightItems = [...DATA.matchingPairs].sort((a, b) => a.right.localeCompare(b.right));
+
+            rightItems.forEach(pair => {
+                // Find if this right item is already paired
+                const pairedLeftId = Object.keys(state.matching.paired).find(key => state.matching.paired[key] === pair.id);
+                const isPaired = !!pairedLeftId;
+
+                const btn = document.createElement('button');
+                btn.disabled = isPaired;
+                btn.onclick = () => selectMatchingRight(pair.id);
+
+                let btnClass = "w-full text-left p-3.5 rounded-xl border text-xs sm:text-sm font-medium transition-all flex items-center justify-between ";
+                if (isPaired) {
+                    btnClass += "border-emerald-300 bg-emerald-50 text-emerald-800 opacity-75 cursor-default";
+                } else {
+                    btnClass += "border-slate-200 hover:border-sky-400 bg-slate-50 hover:bg-sky-50/50 text-slate-800";
+                }
+
+                btn.className = btnClass;
+                btn.innerHTML = `
+                    <span>${pair.right}</span>
+                    ${isPaired ? '<i class="fa-solid fa-check-double text-emerald-600"></i>' : ''}
+                `;
+
+                rightContainer.appendChild(btn);
+            });
+
+            document.getElementById('matching-score').innerText = Object.keys(state.matching.paired).length;
+        }
+
+        function selectMatchingLeft(id) {
+            state.matching.selectedLeft = id;
+            renderMatching();
+        }
+
+        function selectMatchingRight(rightId) {
+            if (!state.matching.selectedLeft) {
+                showToast('Спочатку оберіть поняття з лівого стовпчика!', 'info');
+                return;
+            }
+
+            const leftId = state.matching.selectedLeft;
+            // Check if correct match
+            if (leftId === rightId) {
+                state.matching.paired[leftId] = rightId;
+                state.matching.selectedLeft = null;
+                showToast('Правильна пара! ✨', 'success');
+            } else {
+                showToast('Невірна відповідність. Спробуйте ще раз!', 'error');
+                state.matching.selectedLeft = null;
+            }
+
+            renderMatching();
+            updateTotalProgress();
+        }
+
+        function resetMatching() {
+            state.matching.paired = {};
+            state.matching.selectedLeft = null;
+            renderMatching();
+            updateTotalProgress();
+        }
+
+        /* ==========================================================================
+           MODULE 5: VISUAL IDENTIFICATION LOGIC
+           ========================================================================== */
+
+        function renderVisuals() {
+            const container = document.getElementById('visual-cards-container');
+            container.innerHTML = '';
+
+            const allOptions = ["Суміжні кути", "Вертикальні кути", "Перпендикулярні прямі", "Різносторонні кути", "Бісектриса кута"];
+
+            DATA.visuals.forEach(v => {
+                const card = document.createElement('div');
+                card.className = "bg-white p-5 rounded-2xl shadow-sm border border-slate-200 flex flex-col justify-between space-y-4";
+                
+                const selectedVal = state.visual.userAnswers[v.id] || "";
+                const isChecked = selectedVal !== "";
+                const isCorrect = selectedVal === v.answer;
+
+                card.innerHTML = `
+                    <div>
+                        <div class="flex items-center justify-between border-b border-slate-100 pb-2 mb-3">
+                            <span class="text-xs font-bold text-slate-400 uppercase tracking-wider">${v.title}</span>
+                            <span id="vis-badge-${v.id}" class="text-xs font-bold">${isChecked ? (isCorrect ? '<span class="text-emerald-600"><i class="fa-solid fa-circle-check"></i> Вірно</span>' : '<span class="text-rose-600"><i class="fa-solid fa-circle-xmark"></i> Помилка</span>') : ''}</span>
+                        </div>
+                        <!-- SVG Diagram Container -->
+                        <div class="bg-slate-50/80 rounded-xl p-3 border border-slate-100 flex items-center justify-center">
+                            ${v.svg}
+                        </div>
+                    </div>
+
+                    <div class="space-y-3">
+                        <label class="block text-xs font-semibold text-slate-500">Визначте об'єкт на малюнку:</label>
+                        <select onchange="answerVisual(${v.id}, this.value)" class="w-full px-3 py-2 rounded-xl border border-slate-300 bg-slate-50 font-medium text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-sky-500">
+                            <option value="">-- Оберіть варіант --</option>
+                            ${allOptions.map(opt => `<option value="${opt}" ${selectedVal === opt ? 'selected' : ''}>${opt}</option>`).join('')}
+                        </select>
+
+                        <div id="vis-exp-${v.id}" class="${isChecked ? 'block' : 'hidden'} text-xs p-3 rounded-xl bg-slate-50 border border-slate-200 text-slate-600 leading-relaxed">
+                            <i class="fa-solid fa-lightbulb text-amber-500 mr-1"></i> ${v.explanation}
+                        </div>
+                    </div>
+                `;
+
+                container.appendChild(card);
+            });
+        }
+
+        function answerVisual(id, val) {
+            if (!val) {
+                delete state.visual.userAnswers[id];
+            } else {
+                state.visual.userAnswers[id] = val;
+                const item = DATA.visuals.find(v => v.id === id);
+                if (item && item.answer === val) {
+                    showToast('Правильно розпізнано малюнок! 📐', 'success');
+                }
+            }
+            renderVisuals();
+            updateTotalProgress();
+        }
+
+        /* ==========================================================================
+           INITIALIZATION ON LOAD
+           ========================================================================== */
+
+        window.onload = function() {
+            renderFlashcard();
+            renderFillBlanks();
+            renderQuiz();
+            renderMatching();
+            renderVisuals();
+            updateTotalProgress();
+        };
+    </script>
+</body>
+</html>
