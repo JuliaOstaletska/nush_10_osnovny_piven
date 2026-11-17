@@ -28,7 +28,6 @@
     background-attachment:fixed;
     min-height:100vh;
   }
-  /* Декоративні математичні символи на фоні */
   body::before, body::after{
     content:"∑ ∫ π √ ∞ ≈ ≠ ± × ÷ Δ θ λ μ σ φ";
     position:fixed; font-size:9rem; font-weight:900;
@@ -39,7 +38,6 @@
   body::before{top:6%; left:-4%; transform:rotate(-12deg)}
   body::after{bottom:4%; right:-6%; transform:rotate(10deg); font-size:7rem; color:rgba(6,182,212,.05)}
 
-  /* ===== Header ===== */
   header.top{
     position:relative; z-index:1;
     background:linear-gradient(135deg,#312e81 0%, #4f46e5 45%, #7c3aed 100%);
@@ -66,7 +64,6 @@
   }
   header.top p{margin:3px 0; opacity:.92; font-size:.95rem}
 
-  /* ===== Main layout ===== */
   main{position:relative; z-index:1; max-width:1180px; margin:26px auto; padding:0 18px 60px}
 
   .section-hint{
@@ -80,7 +77,6 @@
     font-family:"Cambria Math",serif;
   }
 
-  /* ===== Topic cards ===== */
   .topics{display:grid; gap:22px; grid-template-columns:1fr}
   @media(min-width:860px){ .topics{grid-template-columns:1fr 1fr} }
 
@@ -123,7 +119,6 @@
   }
   .topic.open .topic-toggle{transform:rotate(180deg); background:#ddd6fe}
 
-  /* Progress-ish bar */
   .topic-bar{
     height:4px; background:#eef2ff; margin:0 22px;
     border-radius:999px; overflow:hidden;
@@ -134,10 +129,7 @@
     border-radius:999px; transition:width .5s ease;
   }
 
-  /* Lessons inside */
-  .lessons{
-    display:none; padding:14px 14px 18px;
-  }
+  .lessons{display:none; padding:14px 14px 18px;}
   .topic.open .lessons{display:block; animation:slideDown .35s ease}
   @keyframes slideDown{from{opacity:0; transform:translateY(-8px)} to{opacity:1; transform:none}}
 
@@ -161,7 +153,6 @@
     background:#fef3c7; white-space:nowrap;
   }
 
-  /* ===== Lesson view ===== */
   .lesson-view{display:none; animation:fade .3s ease}
   .lesson-view.active{display:block}
   @keyframes fade{from{opacity:0; transform:translateY(10px)} to{opacity:1; transform:none}}
@@ -193,7 +184,6 @@
     margin-bottom:14px; border:1px solid #e0e7ff;
   }
 
-  /* Tabs */
   .tabs{
     display:flex; gap:6px; flex-wrap:wrap; margin:8px 0 20px;
     border-bottom:2px solid var(--line); padding-bottom:0;
@@ -212,7 +202,6 @@
   .tab-panel{display:none}
   .tab-panel.active{display:block; animation:fade .22s ease}
 
-  /* Content */
   .panel h3{margin:18px 0 8px; color:var(--accent-2); font-size:1.05rem}
   .panel ul{margin:8px 0 8px 20px}
   .panel li{margin:4px 0}
@@ -250,7 +239,21 @@
   .source strong{color:#92400e}
   .source::before{content:"📚 "}
 
-  /* Footer */
+  /* Кнопка переходу на окрему сторінку уроку */
+  .open-page-btn{
+    display:inline-flex; align-items:center; gap:8px;
+    padding:12px 20px; border-radius:12px;
+    background:linear-gradient(135deg,var(--accent),var(--accent-2));
+    color:#fff; text-decoration:none; font-weight:700; font-size:.95rem;
+    box-shadow:0 8px 20px rgba(79,70,229,.35);
+    transition:transform .18s ease, box-shadow .18s ease;
+  }
+  .open-page-btn:hover{
+    transform:translateY(-2px);
+    box-shadow:0 12px 26px rgba(79,70,229,.45);
+  }
+  .open-page-btn:active{transform:translateY(0)}
+
   footer{
     position:relative; z-index:1; text-align:center;
     color:var(--muted); font-size:.85rem; padding:24px 16px 40px;
@@ -282,15 +285,13 @@
 <main>
   <p class="section-hint">Оберіть тему, щоб розгорнути перелік уроків. Усередині кожного уроку — три вкладки з джерелами.</p>
 
-  <!-- ================= TOPICS ================= -->
   <div class="topics" id="topics">
 
-    <!-- ===== TOPIC 1 ===== -->
     <section class="topic" data-topic="1">
       <div class="topic-head">
         <div class="topic-icon">∑</div>
         <div class="topic-meta">
-          <h2>Тема 1. Повторення і систематизація знань. Вирази та рівняння </h2>
+          <h2>Тема 1. Повторення і систематизація знань. Вирази та рівняння</h2>
           <div class="sub">12 уроків · вирази, рівняння, системи</div>
         </div>
         <div class="topic-toggle">▾</div>
@@ -312,7 +313,6 @@
       </div>
     </section>
 
-    <!-- ===== TOPIC 2 ===== -->
     <section class="topic" data-topic="2">
       <div class="topic-head">
         <div class="topic-icon">ƒ</div>
@@ -339,7 +339,6 @@
       </div>
     </section>
 
-    <!-- ===== TOPIC 3 ===== -->
     <section class="topic" data-topic="3">
       <div class="topic-head">
         <div class="topic-icon">△</div>
@@ -366,7 +365,6 @@
       </div>
     </section>
 
-    <!-- ===== TOPIC 4 ===== -->
     <section class="topic" data-topic="4">
       <div class="topic-head">
         <div class="topic-icon">◇</div>
@@ -394,12 +392,9 @@
     </section>
   </div>
 
-  <!-- ================= LESSON VIEW ================= -->
   <div class="lesson-view" id="lessonView">
     <button class="back-btn" id="backBtn">← До теми</button>
-    <div class="lesson-card" id="lessonCard">
-      <!-- динамічно наповнюється через JS-шаблони нижче -->
-    </div>
+    <div class="lesson-card" id="lessonCard"></div>
   </div>
 </main>
 
@@ -408,11 +403,7 @@
   Інтерактивний посібник · 2026–2027 · Математика, 10 клас (основний рівень)
 </footer>
 
-<!-- ============================================================
-     ШАБЛОНИ УРОКІВ (приховані). Дані уроків зібрані в JS.
-     ============================================================ -->
 <script>
-/* ------------------------- ДАНІ УРОКІВ ------------------------- */
 const LESSONS = {
   1: {
     title: "Тотожні перетворення цілих виразів",
@@ -506,7 +497,6 @@ const LESSONS = {
       <div class="task"><div class="q">3. Спростіть: (√3 − √2)² + 2√6.</div></div>
       <div class="source"><strong>Джерела:</strong> Мерзляк А. Г. та ін. Математика. 10 клас. § 2, впр. 53–60.</div>`
   },
-  /* ---------- Далі уроки 4–48 можна додати аналогічно. ---------- */
   4: {
     title: "Розв'язування задач",
     topic: "Тема 1. Повторення (7–9 клас)",
@@ -544,17 +534,6 @@ const LESSONS = {
       <div class="task"><div class="q">2. Виконайте дії: 3/(x+1) + 2/(x−1).</div></div>
       <div class="source"><strong>Джерела:</strong> Мерзляк А. Г. та ін. Математика. 10 клас. § 3, впр. 89–96.</div>`
   },
-  /* Заглушка для уроків без окремого контенту */
-  _default: {
-    title: "Урок (контент у процесі наповнення)",
-    topic: "Інтерактивний посібник",
-    dovid: `<p>Матеріал цього уроку буде додано найближчим часом. Скористайтеся іншими уроками або зверніться до вчителя.</p>
-            <div class="source"><strong>Джерела:</strong> Мерзляк А. Г. та ін. Математика. 10 клас. — Гімназія, 2026.</div>`,
-    razom: `<div class="task"><div class="q">Завдання з'являться незабаром.</div></div>
-            <div class="source"><strong>Джерела:</strong> Мерзляк А. Г. та ін. Математика. 10 клас.</div>`,
-    samo: `<div class="task"><div class="q">Завдання для самопідготовки з'являться незабаром.</div></div>
-           <div class="source"><strong>Джерела:</strong> Мерзляк А. Г. та ін. Математика. 10 клас.</div>`
-  }
 
   25: {
     title: "Суміжні та вертикальні кути. Властивості та ознаки паралельних прямих",
@@ -578,11 +557,18 @@ const LESSONS = {
       <div class="source"><strong>Джерела:</strong> Мерзляк А. Г. та ін. Математика. 10 клас. § 14.</div>`
   },
 
-}; 
+  _default: {
+    title: "Урок (контент у процесі наповнення)",
+    topic: "Інтерактивний посібник",
+    dovid: `<p>Матеріал цього уроку буде додано найближчим часом. Скористайтеся іншими уроками або зверніться до вчителя.</p>
+            <div class="source"><strong>Джерела:</strong> Мерзляк А. Г. та ін. Математика. 10 клас. — Гімназія, 2026.</div>`,
+    razom: `<div class="task"><div class="q">Завдання з'являться незабаром.</div></div>
+            <div class="source"><strong>Джерела:</strong> Мерзляк А. Г. та ін. Математика. 10 клас.</div>`,
+    samo: `<div class="task"><div class="q">Завдання для самопідготовки з'являться незабаром.</div></div>
+           <div class="source"><strong>Джерела:</strong> Мерзляк А. Г. та ін. Математика. 10 клас.</div>`
+  }
+};
 
-/* ------------------------- ЛОГІКА UI ------------------------- */
-
-/* 1) Розгортання тем */
 document.querySelectorAll('.topic').forEach(topic => {
   const head = topic.querySelector('.topic-head');
   const bar  = topic.querySelector('.topic-bar span');
@@ -597,7 +583,6 @@ document.querySelectorAll('.topic').forEach(topic => {
   });
 });
 
-/* 2) Відкриття уроку */
 const lessonView = document.getElementById('lessonView');
 const lessonCard = document.getElementById('lessonCard');
 const topicsBox  = document.getElementById('topics');
@@ -621,7 +606,6 @@ function openLesson(num, pushState = true) {
     <div class="tab-panel" data-panel="samo"><div class="panel">${data.samo}</div></div>
   `;
 
-  /* Вкладки */
   lessonCard.querySelectorAll('.tab-btn').forEach(btn => {
     btn.addEventListener('click', () => {
       const key = btn.dataset.tab;
@@ -646,7 +630,6 @@ function closeLesson(pushState = true) {
   if (pushState) history.pushState({}, '', '#');
 }
 
-/* Клік по уроку в темі */
 document.querySelectorAll('.lesson-link').forEach(link => {
   link.addEventListener('click', e => {
     e.preventDefault();
@@ -656,7 +639,6 @@ document.querySelectorAll('.lesson-link').forEach(link => {
 
 backBtn.addEventListener('click', () => closeLesson());
 
-/* Підтримка історії браузера */
 window.addEventListener('popstate', e => {
   if (e.state && e.state.lesson) {
     openLesson(e.state.lesson, false);
@@ -665,7 +647,6 @@ window.addEventListener('popstate', e => {
   }
 });
 
-/* Якщо сторінку відкрито з #lesson-N — показати одразу */
 (function initFromHash() {
   const m = location.hash.match(/^#lesson-(\d+)$/);
   if (m) openLesson(m[1], false);
