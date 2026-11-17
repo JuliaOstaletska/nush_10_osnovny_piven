@@ -1,84 +1,652 @@
 <!DOCTYPE html>
 <html lang="uk">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Математика</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Інтерактивний посібник з математики — 10 клас</title>
+<style>
+  :root{
+    --bg1:#eef2ff; --bg2:#f8fafc;
+    --card:#ffffff; --ink:#0f172a; --muted:#64748b;
+    --accent:#4f46e5; --accent-2:#7c3aed; --accent-3:#06b6d4;
+    --soft:#eef2ff; --line:#e2e8f0;
+    --ok:#16a34a; --warn:#f59e0b;
+    --shadow:0 10px 30px rgba(30,41,59,.08);
+    --shadow-lg:0 20px 45px rgba(79,70,229,.18);
+    --radius:18px;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{
+    margin:0;
+    font-family: system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+    color:var(--ink); line-height:1.55;
+    background:
+      radial-gradient(circle at 10% 0%, #e0e7ff 0%, transparent 45%),
+      radial-gradient(circle at 90% 10%, #cffafe 0%, transparent 40%),
+      linear-gradient(180deg, var(--bg1), var(--bg2) 60%);
+    background-attachment:fixed;
+    min-height:100vh;
+  }
+  /* Декоративні математичні символи на фоні */
+  body::before, body::after{
+    content:"∑ ∫ π √ ∞ ≈ ≠ ± × ÷ Δ θ λ μ σ φ";
+    position:fixed; font-size:9rem; font-weight:900;
+    color:rgba(79,70,229,.045);
+    pointer-events:none; z-index:0; white-space:nowrap;
+    letter-spacing:.4em;
+  }
+  body::before{top:6%; left:-4%; transform:rotate(-12deg)}
+  body::after{bottom:4%; right:-6%; transform:rotate(10deg); font-size:7rem; color:rgba(6,182,212,.05)}
 
-        body {
-            /* Світлий градієнтний фон */
-            background: linear-gradient(145deg, #f7f9fc 0%, #e9eef4 100%);
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            font-family: 'Segoe UI', Roboto, system-ui, -apple-system, sans-serif;
-            text-align: center;
-        }
+  /* ===== Header ===== */
+  header.top{
+    position:relative; z-index:1;
+    background:linear-gradient(135deg,#312e81 0%, #4f46e5 45%, #7c3aed 100%);
+    color:#fff; padding:38px 22px 30px; overflow:hidden;
+  }
+  header.top::before{
+    content:"∫ f(x) dx = F(x) + C";
+    position:absolute; right:-20px; top:10px;
+    font-family:"Cambria Math","Times New Roman",serif;
+    font-size:3.2rem; font-style:italic; opacity:.12;
+    pointer-events:none;
+  }
+  header.top .inner{max-width:1180px; margin:0 auto}
+  header.top h1{
+    margin:0 0 8px; font-size:1.7rem; letter-spacing:.2px;
+    display:flex; align-items:center; gap:12px; flex-wrap:wrap;
+  }
+  header.top h1 .pi-badge{
+    display:inline-grid; place-items:center;
+    width:46px; height:46px; border-radius:50%;
+    background:rgba(255,255,255,.15); border:1px solid rgba(255,255,255,.35);
+    font-family:"Cambria Math",serif; font-style:italic; font-size:1.5rem;
+    backdrop-filter:blur(4px);
+  }
+  header.top p{margin:3px 0; opacity:.92; font-size:.95rem}
 
-        h1 {
-            font-size: clamp(3rem, 10vw, 6rem);
-            font-weight: 800;
-            color: #11314b;
-            text-shadow: 0 4px 15px rgba(0, 20, 40, 0.15);
-            letter-spacing: 0.05em;
-            margin-bottom: 20px;
-        }
+  /* ===== Main layout ===== */
+  main{position:relative; z-index:1; max-width:1180px; margin:26px auto; padding:0 18px 60px}
 
-        h2 {
-            font-size: 2rem;
-            font-weight: 600;
-            color: #1e4b6b;
-            margin: 10px 0;
-        }
+  .section-hint{
+    display:flex; align-items:center; gap:10px;
+    font-size:.9rem; color:var(--muted); margin:0 0 16px 4px;
+  }
+  .section-hint::before{
+    content:"π"; display:inline-grid; place-items:center;
+    width:26px; height:26px; border-radius:50%;
+    background:var(--soft); color:var(--accent); font-weight:800;
+    font-family:"Cambria Math",serif;
+  }
 
-        i {
-            font-style: italic;
-            font-weight: 400;
-            color: #3d7ea3;
-        }
+  /* ===== Topic cards ===== */
+  .topics{display:grid; gap:22px; grid-template-columns:1fr}
+  @media(min-width:860px){ .topics{grid-template-columns:1fr 1fr} }
 
-        /* Стилі для кнопки переходу */
-        .nav-button {
-            margin-top: 40px;
-            display: inline-block;
-            padding: 15px 40px;
-            font-size: 1.2rem;
-            font-weight: 600;
-            color: #ffffff;
-            background: linear-gradient(135deg, #1e4b6b, #3d7ea3);
-            text-decoration: none;
-            border-radius: 50px;
-            box-shadow: 0 10px 20px rgba(30, 75, 107, 0.3);
-            transition: all 0.3s ease;
-        }
+  .topic{
+    background:var(--card); border-radius:var(--radius);
+    box-shadow:var(--shadow); border:1px solid var(--line);
+    overflow:hidden; position:relative;
+    transition:transform .25s ease, box-shadow .25s ease;
+  }
+  .topic:hover{transform:translateY(-3px); box-shadow:var(--shadow-lg)}
+  .topic::before{
+    content:""; position:absolute; inset:0 0 auto 0; height:6px;
+    background:linear-gradient(90deg,var(--accent),var(--accent-2),var(--accent-3));
+  }
 
-        .nav-button:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 15px 25px rgba(30, 75, 107, 0.4);
-            background: linear-gradient(135deg, #11314b, #2d6a8f);
-        }
+  .topic-head{
+    display:flex; align-items:center; gap:14px;
+    padding:22px 22px 18px; cursor:pointer; user-select:none;
+    background:linear-gradient(180deg,#ffffff,#f8faff);
+  }
+  .topic-icon{
+    flex:0 0 56px; height:56px; border-radius:16px;
+    display:grid; place-items:center; font-size:1.55rem;
+    color:#fff; font-family:"Cambria Math",serif; font-style:italic;
+    background:linear-gradient(135deg,var(--accent),var(--accent-2));
+    box-shadow:0 8px 18px rgba(79,70,229,.35);
+  }
+  .topic:nth-child(2) .topic-icon{background:linear-gradient(135deg,#0891b2,#06b6d4); box-shadow:0 8px 18px rgba(6,182,212,.35)}
+  .topic:nth-child(3) .topic-icon{background:linear-gradient(135deg,#d97706,#f59e0b); box-shadow:0 8px 18px rgba(245,158,11,.35)}
+  .topic:nth-child(4) .topic-icon{background:linear-gradient(135deg,#db2777,#ec4899); box-shadow:0 8px 18px rgba(236,72,153,.35)}
 
-        .nav-button:active {
-            transform: translateY(1px);
-            box-shadow: 0 5px 10px rgba(30, 75, 107, 0.3);
-        }
-    </style>
+  .topic-meta{flex:1; min-width:0}
+  .topic-meta h2{margin:0; font-size:1.12rem; line-height:1.3}
+  .topic-meta .sub{color:var(--muted); font-size:.85rem; margin-top:3px}
+  .topic-toggle{
+    flex:0 0 auto; width:38px; height:38px; border-radius:50%;
+    display:grid; place-items:center; color:var(--accent);
+    background:var(--soft); font-size:1.1rem; font-weight:800;
+    transition:transform .3s ease, background .3s ease;
+  }
+  .topic.open .topic-toggle{transform:rotate(180deg); background:#ddd6fe}
+
+  /* Progress-ish bar */
+  .topic-bar{
+    height:4px; background:#eef2ff; margin:0 22px;
+    border-radius:999px; overflow:hidden;
+  }
+  .topic-bar span{
+    display:block; height:100%; width:0;
+    background:linear-gradient(90deg,var(--accent),var(--accent-2));
+    border-radius:999px; transition:width .5s ease;
+  }
+
+  /* Lessons inside */
+  .lessons{
+    display:none; padding:14px 14px 18px;
+  }
+  .topic.open .lessons{display:block; animation:slideDown .35s ease}
+  @keyframes slideDown{from{opacity:0; transform:translateY(-8px)} to{opacity:1; transform:none}}
+
+  .lesson-link{
+    display:flex; align-items:center; gap:12px;
+    padding:11px 14px; border-radius:12px; cursor:pointer;
+    color:var(--ink); text-decoration:none; font-size:.93rem;
+    border:1px solid transparent; transition:all .18s ease;
+  }
+  .lesson-link:hover{background:var(--soft); border-color:#c7d2fe}
+  .lesson-link .num{
+    flex:0 0 28px; height:28px; border-radius:8px;
+    display:grid; place-items:center; font-size:.78rem; font-weight:800;
+    color:#fff; background:linear-gradient(135deg,var(--accent),var(--accent-2));
+  }
+  .lesson-link.control .num{background:linear-gradient(135deg,#dc2626,#f97316)}
+  .lesson-link.control{font-weight:600}
+  .lesson-link .tag{
+    margin-left:auto; font-size:.7rem; font-weight:700;
+    padding:2px 8px; border-radius:999px; color:#92400e;
+    background:#fef3c7; white-space:nowrap;
+  }
+
+  /* ===== Lesson view ===== */
+  .lesson-view{display:none; animation:fade .3s ease}
+  .lesson-view.active{display:block}
+  @keyframes fade{from{opacity:0; transform:translateY(10px)} to{opacity:1; transform:none}}
+
+  .back-btn{
+    display:inline-flex; align-items:center; gap:8px;
+    background:#fff; border:1px solid var(--line); color:var(--accent);
+    padding:9px 16px; border-radius:12px; cursor:pointer; font-weight:600;
+    font-size:.9rem; box-shadow:var(--shadow); margin-bottom:16px;
+    transition:all .18s ease;
+  }
+  .back-btn:hover{background:var(--soft); border-color:#c7d2fe; transform:translateX(-2px)}
+
+  .lesson-card{
+    background:var(--card); border-radius:var(--radius);
+    box-shadow:var(--shadow); border:1px solid var(--line);
+    padding:24px; position:relative; overflow:hidden;
+  }
+  .lesson-card::after{
+    content:"∴";
+    position:absolute; right:18px; top:8px; font-size:3.4rem;
+    color:rgba(79,70,229,.06); font-family:"Cambria Math",serif;
+    pointer-events:none;
+  }
+  .lesson-card h2{margin:0 0 4px; font-size:1.35rem}
+  .badge{
+    display:inline-block; background:var(--soft); color:var(--accent-2);
+    font-size:.78rem; font-weight:700; padding:3px 10px; border-radius:999px;
+    margin-bottom:14px; border:1px solid #e0e7ff;
+  }
+
+  /* Tabs */
+  .tabs{
+    display:flex; gap:6px; flex-wrap:wrap; margin:8px 0 20px;
+    border-bottom:2px solid var(--line); padding-bottom:0;
+  }
+  .tab-btn{
+    background:transparent; border:none; cursor:pointer;
+    padding:11px 14px; font-size:.9rem; font-weight:700;
+    color:var(--muted); border-radius:10px 10px 0 0;
+    position:relative; top:2px; transition:all .18s ease;
+    display:inline-flex; align-items:center; gap:6px;
+  }
+  .tab-btn:hover{color:var(--accent-2); background:#f5f7ff}
+  .tab-btn.active{
+    color:var(--accent-2); background:#fff; border-bottom:3px solid var(--accent);
+  }
+  .tab-panel{display:none}
+  .tab-panel.active{display:block; animation:fade .22s ease}
+
+  /* Content */
+  .panel h3{margin:18px 0 8px; color:var(--accent-2); font-size:1.05rem}
+  .panel ul{margin:8px 0 8px 20px}
+  .panel li{margin:4px 0}
+  .formula{
+    background:linear-gradient(180deg,#f8faff,#eef2ff);
+    border-left:4px solid var(--accent); padding:11px 15px;
+    border-radius:10px; margin:10px 0; overflow-x:auto;
+    font-family:"Cambria Math","Times New Roman",serif;
+    font-size:1.08rem;
+  }
+  .task{
+    background:#fbfdff; border:1px solid var(--line); border-radius:12px;
+    padding:14px 16px; margin:12px 0; transition:border-color .18s ease;
+  }
+  .task:hover{border-color:#c7d2fe}
+  .task .q{font-weight:600}
+  details{
+    margin-top:10px; background:#f0fdf4; border:1px solid #bbf7d0;
+    border-radius:10px; padding:10px 14px;
+  }
+  details summary{
+    cursor:pointer; font-weight:700; color:var(--ok);
+    user-select:none; list-style:none; display:flex; align-items:center; gap:6px;
+  }
+  details summary::-webkit-details-marker{display:none}
+  details summary::before{
+    content:"▸"; display:inline-block; transition:transform .2s;
+  }
+  details[open] summary::before{transform:rotate(90deg)}
+  details .solution{margin-top:8px; color:#14532d; font-size:.96rem}
+  .source{
+    margin-top:16px; padding:10px 14px; border-left:4px solid var(--warn);
+    background:#fffbeb; border-radius:8px; font-size:.87rem; color:#78350f;
+  }
+  .source strong{color:#92400e}
+  .source::before{content:"📚 "}
+
+  /* Footer */
+  footer{
+    position:relative; z-index:1; text-align:center;
+    color:var(--muted); font-size:.85rem; padding:24px 16px 40px;
+  }
+  footer .fx{
+    font-family:"Cambria Math",serif; font-style:italic;
+    color:var(--accent-2); opacity:.7; display:block; margin-bottom:6px;
+  }
+
+  @media print{
+    .tabs, .back-btn, footer, header.top .pi-badge{display:none}
+    .topic.open .lessons{display:block}
+    .lesson-view{display:block !important}
+    .tab-panel{display:block !important}
+    .lesson-card{box-shadow:none; page-break-after:always}
+  }
+</style>
 </head>
 <body>
-    <h1>Математика</h1>
-    <h2>10 клас</h2>
-    <h2><i>Основний рівень</i></h2>
 
-    <!-- Кнопка переходу. Замініть "linijni_rivnjanna.html" на назву вашого файлу -->
-    <a href="linijni_rivnjanna/linijni_rivnjanna.html" class="nav-button">Лінійні рівняння →</a>
+<header class="top">
+  <div class="inner">
+    <h1><span class="pi-badge">π</span> Інтерактивний посібник з математики</h1>
+    <p>10 клас · лінгвістичний А клас · основний рівень · I семестр</p>
+    <p>Учитель: Осталецька Юлія Петрівна · Підручник: Мерзляк А. Г. та ін., «Математика. 10 клас», Гімназія, 2026</p>
+  </div>
+</header>
 
+<main>
+  <p class="section-hint">Оберіть тему, щоб розгорнути перелік уроків. Усередині кожного уроку — три вкладки з джерелами.</p>
+
+  <!-- ================= TOPICS ================= -->
+  <div class="topics" id="topics">
+
+    <!-- ===== TOPIC 1 ===== -->
+    <section class="topic" data-topic="1">
+      <div class="topic-head">
+        <div class="topic-icon">∑</div>
+        <div class="topic-meta">
+          <h2>Тема 1. Повторення і систематизація знань (7–9 клас)</h2>
+          <div class="sub">12 уроків · вирази, рівняння, системи</div>
+        </div>
+        <div class="topic-toggle">▾</div>
+      </div>
+      <div class="topic-bar"><span></span></div>
+      <div class="lessons">
+        <a class="lesson-link" data-lesson="1"><span class="num">1</span> Тотожні перетворення цілих виразів</a>
+        <a class="lesson-link" data-lesson="2"><span class="num">2</span> Розклад многочлена на множники</a>
+        <a class="lesson-link" data-lesson="3"><span class="num">3</span> Найпростіші ірраціональні вирази</a>
+        <a class="lesson-link" data-lesson="4"><span class="num">4</span> Розв'язування задач</a>
+        <a class="lesson-link" data-lesson="5"><span class="num">5</span> Дробово-раціональні вирази</a>
+        <a class="lesson-link" data-lesson="6"><span class="num">6</span> Розв'язування задач. Самостійна робота <span class="tag">СР</span></a>
+        <a class="lesson-link" data-lesson="7"><span class="num">7</span> Лінійні рівняння</a>
+        <a class="lesson-link" data-lesson="8"><span class="num">8</span> Системи лінійних рівнянь</a>
+        <a class="lesson-link" data-lesson="9"><span class="num">9</span> Квадратні рівняння</a>
+        <a class="lesson-link" data-lesson="10"><span class="num">10</span> Розв'язування задач. Самостійна робота <span class="tag">СР</span></a>
+        <a class="lesson-link" data-lesson="11"><span class="num">11</span> Найпростіші дробово-раціональні рівняння</a>
+        <a class="lesson-link control" data-lesson="12"><span class="num">12</span> Контрольна робота № 1 <span class="tag">КР</span></a>
+      </div>
+    </section>
+
+    <!-- ===== TOPIC 2 ===== -->
+    <section class="topic" data-topic="2">
+      <div class="topic-head">
+        <div class="topic-icon">ƒ</div>
+        <div class="topic-meta">
+          <h2>Тема 2. Функції та нерівності</h2>
+          <div class="sub">12 уроків · графіки, лінійні та квадратні нерівності</div>
+        </div>
+        <div class="topic-toggle">▾</div>
+      </div>
+      <div class="topic-bar"><span></span></div>
+      <div class="lessons">
+        <a class="lesson-link" data-lesson="13"><span class="num">13</span> Поняття функції та її властивості</a>
+        <a class="lesson-link" data-lesson="14"><span class="num">14</span> Лінійна функція, її графік</a>
+        <a class="lesson-link" data-lesson="15"><span class="num">15</span> Квадратична функція та її властивості</a>
+        <a class="lesson-link" data-lesson="16"><span class="num">16</span> Побудова графіка квадратичної функції</a>
+        <a class="lesson-link" data-lesson="17"><span class="num">17</span> Застосування графіків функцій</a>
+        <a class="lesson-link" data-lesson="18"><span class="num">18</span> Розв'язування задач. Самостійна робота <span class="tag">СР</span></a>
+        <a class="lesson-link" data-lesson="19"><span class="num">19</span> Лінійні нерівності. Системи</a>
+        <a class="lesson-link" data-lesson="20"><span class="num">20</span> Подвійні лінійні нерівності</a>
+        <a class="lesson-link" data-lesson="21"><span class="num">21</span> Квадратні нерівності</a>
+        <a class="lesson-link" data-lesson="22"><span class="num">22</span> Розв'язування задач. Самостійна робота <span class="tag">СР</span></a>
+        <a class="lesson-link" data-lesson="23"><span class="num">23</span> Квадратні нерівності (поглиблення)</a>
+        <a class="lesson-link control" data-lesson="24"><span class="num">24</span> Контрольна робота № 2 <span class="tag">КР</span></a>
+      </div>
+    </section>
+
+    <!-- ===== TOPIC 3 ===== -->
+    <section class="topic" data-topic="3">
+      <div class="topic-head">
+        <div class="topic-icon">△</div>
+        <div class="topic-meta">
+          <h2>Тема 3. Планіметрія: трикутники</h2>
+          <div class="sub">12 уроків · кути, рівність, подібність, площі</div>
+        </div>
+        <div class="topic-toggle">▾</div>
+      </div>
+      <div class="topic-bar"><span></span></div>
+      <div class="lessons">
+        <a class="lesson-link" data-lesson="25"><span class="num">25</span> Суміжні та вертикальні кути</a>
+        <a class="lesson-link" data-lesson="26"><span class="num">26</span> Властивості та ознаки паралельних прямих</a>
+        <a class="lesson-link" data-lesson="27"><span class="num">27</span> Трикутники. Види трикутників</a>
+        <a class="lesson-link" data-lesson="28"><span class="num">28</span> Ознаки рівності трикутників</a>
+        <a class="lesson-link" data-lesson="29"><span class="num">29</span> Прямокутний трикутник. Теорема Піфагора</a>
+        <a class="lesson-link" data-lesson="30"><span class="num">30</span> Розв'язування прямокутних трикутників. СР <span class="tag">СР</span></a>
+        <a class="lesson-link" data-lesson="31"><span class="num">31</span> Теорема Фалеса. Пропорційні відрізки</a>
+        <a class="lesson-link" data-lesson="32"><span class="num">32</span> Ознаки подібності трикутників</a>
+        <a class="lesson-link" data-lesson="33"><span class="num">33</span> Площа трикутника</a>
+        <a class="lesson-link" data-lesson="34"><span class="num">34</span> Формула Герона. Самостійна робота <span class="tag">СР</span></a>
+        <a class="lesson-link" data-lesson="35"><span class="num">35</span> Теорема косинусів. Теорема синусів</a>
+        <a class="lesson-link control" data-lesson="36"><span class="num">36</span> Контрольна робота № 3 <span class="tag">КР</span></a>
+      </div>
+    </section>
+
+    <!-- ===== TOPIC 4 ===== -->
+    <section class="topic" data-topic="4">
+      <div class="topic-head">
+        <div class="topic-icon">◇</div>
+        <div class="topic-meta">
+          <h2>Тема 4. Чотирикутники, коло, координати й вектори</h2>
+          <div class="sub">12 уроків · паралелограм, трапеція, коло, вектори</div>
+        </div>
+        <div class="topic-toggle">▾</div>
+      </div>
+      <div class="topic-bar"><span></span></div>
+      <div class="lessons">
+        <a class="lesson-link" data-lesson="37"><span class="num">37</span> Види чотирикутників та їх властивості</a>
+        <a class="lesson-link" data-lesson="38"><span class="num">38</span> Паралелограм. Властивості</a>
+        <a class="lesson-link" data-lesson="39"><span class="num">39</span> Ромб. Прямокутник. Квадрат</a>
+        <a class="lesson-link" data-lesson="40"><span class="num">40</span> Розв'язування задач</a>
+        <a class="lesson-link" data-lesson="41"><span class="num">41</span> Трапеція. Види трапецій</a>
+        <a class="lesson-link" data-lesson="42"><span class="num">42</span> Розв'язування задач. Самостійна робота <span class="tag">СР</span></a>
+        <a class="lesson-link" data-lesson="43"><span class="num">43</span> Коло та круг</a>
+        <a class="lesson-link" data-lesson="44"><span class="num">44</span> Розв'язування задач</a>
+        <a class="lesson-link" data-lesson="45"><span class="num">45</span> Вписані та описані багатокутники</a>
+        <a class="lesson-link" data-lesson="46"><span class="num">46</span> Розв'язування задач. Самостійна робота <span class="tag">СР</span></a>
+        <a class="lesson-link" data-lesson="47"><span class="num">47</span> Координати та вектори</a>
+        <a class="lesson-link" data-lesson="48"><span class="num">48</span> Розв'язування задач. Тематична <span class="tag">Т</span></a>
+      </div>
+    </section>
+  </div>
+
+  <!-- ================= LESSON VIEW ================= -->
+  <div class="lesson-view" id="lessonView">
+    <button class="back-btn" id="backBtn">← До теми</button>
+    <div class="lesson-card" id="lessonCard">
+      <!-- динамічно наповнюється через JS-шаблони нижче -->
+    </div>
+  </div>
+</main>
+
+<footer>
+  <span class="fx">a² + b² = c²</span>
+  Інтерактивний посібник · 2026–2027 · Математика, 10 клас (основний рівень)
+</footer>
+
+<!-- ============================================================
+     ШАБЛОНИ УРОКІВ (приховані). Дані уроків зібрані в JS.
+     ============================================================ -->
+<script>
+/* ------------------------- ДАНІ УРОКІВ ------------------------- */
+const LESSONS = {
+  1: {
+    title: "Тотожні перетворення цілих виразів",
+    topic: "Тема 1. Повторення (7–9 клас)",
+    dovid: `
+      <h3>Основні поняття</h3>
+      <ul>
+        <li><b>Тотожність</b> — рівність, правильна за всіх допустимих значень змінних.</li>
+        <li><b>Тотожні перетворення</b> — заміна виразу тотожно рівним йому.</li>
+      </ul>
+      <h3>Формули скороченого множення</h3>
+      <div class="formula">(a ± b)² = a² ± 2ab + b²</div>
+      <div class="formula">a² − b² = (a − b)(a + b)</div>
+      <div class="formula">(a ± b)³ = a³ ± 3a²b + 3ab² ± b³</div>
+      <div class="formula">a³ ± b³ = (a ± b)(a² ∓ ab + b²)</div>
+      <h3>Порядок дій</h3>
+      <p>Дії в дужках → степені → множення/ділення → додавання/віднімання.</p>
+      <div class="source"><strong>Джерела:</strong> Мерзляк А. Г. та ін. Математика. 10 клас. § 1. — С. 5–12; формули скороченого множення (курс 7 класу).</div>`,
+    razom: `
+      <div class="task"><div class="q">Завдання 1. Спростіть: (2x − 3)² − (2x + 1)(2x − 1).</div>
+        <details><summary>Показати розв'язок</summary><div class="solution">
+          (2x−3)² = 4x² − 12x + 9; (2x+1)(2x−1) = 4x² − 1;<br>
+          Різниця: 4x² − 12x + 9 − (4x² − 1) = <b>−12x + 10</b>.
+        </div></details></div>
+      <div class="task"><div class="q">Завдання 2. Розкладіть на множники: a³ − 8b³.</div>
+        <details><summary>Показати розв'язок</summary><div class="solution">
+          За формулою різниці кубів: a³ − (2b)³ = <b>(a − 2b)(a² + 2ab + 4b²)</b>.
+        </div></details></div>
+      <div class="task"><div class="q">Завдання 3. Доведіть тотожність: (a+b)² − (a−b)² = 4ab.</div>
+        <details><summary>Показати розв'язок</summary><div class="solution">
+          Ліва частина: a² + 2ab + b² − (a² − 2ab + b²) = <b>4ab</b>. Тотожність доведено.
+        </div></details></div>
+      <div class="source"><strong>Джерела:</strong> Мерзляк А. Г. та ін. Математика. 10 клас. § 1, впр. 1–18.</div>`,
+    samo: `
+      <div class="task"><div class="q">1. Спростіть: (3a − 2b)² + (3a + 2b)(3a − 2b).</div></div>
+      <div class="task"><div class="q">2. Розкладіть на множники: x⁴ − 16.</div></div>
+      <div class="task"><div class="q">3. Доведіть, що (n+3)² − (n−3)² кратне 12 для будь-якого цілого n.</div></div>
+      <div class="source"><strong>Джерела:</strong> Мерзляк А. Г. та ін. Математика. 10 клас. § 1, впр. 19–27.</div>`
+  },
+  2: {
+    title: "Розклад многочлена на множники",
+    topic: "Тема 1. Повторення (7–9 клас)",
+    dovid: `
+      <h3>Способи розкладання</h3>
+      <ul>
+        <li><b>Винесення спільного множника:</b> ma + mb = m(a+b).</li>
+        <li><b>Групування:</b> ax + ay + bx + by = (x+y)(a+b).</li>
+        <li><b>Формули скороченого множення.</b></li>
+        <li><b>Виділення повного квадрата.</b></li>
+      </ul>
+      <h3>Ознака кратності</h3>
+      <p>Якщо P(a) = 0, то многочлен P(x) ділиться на (x − a).</p>
+      <div class="source"><strong>Джерела:</strong> Мерзляк А. Г. та ін. Математика. 10 клас. § 1. — С. 10–12.</div>`,
+    razom: `
+      <div class="task"><div class="q">Завдання 1. Розкладіть на множники: 6x² − 24.</div>
+        <details><summary>Показати розв'язок</summary><div class="solution">6(x² − 4) = <b>6(x − 2)(x + 2)</b>.</div></details></div>
+      <div class="task"><div class="q">Завдання 2. Розкладіть: x² + 5x − 6.</div>
+        <details><summary>Показати розв'язок</summary><div class="solution">
+          Корені x₁ = −6, x₂ = 1 (за теоремою Вієта).<br>
+          Отже, x² + 5x − 6 = <b>(x + 6)(x − 1)</b>.
+        </div></details></div>
+      <div class="source"><strong>Джерела:</strong> Мерзляк А. Г. та ін. Математика. 10 клас. § 1, впр. 28–35.</div>`,
+    samo: `
+      <div class="task"><div class="q">1. Розкладіть: 2a² − 18b².</div></div>
+      <div class="task"><div class="q">2. Розкладіть: x³ + 8.</div></div>
+      <div class="task"><div class="q">3. Розкладіть: x² − 7x + 12.</div></div>
+      <div class="source"><strong>Джерела:</strong> Мерзляк А. Г. та ін. Математика. 10 клас. § 1, впр. 36–42.</div>`
+  },
+  3: {
+    title: "Найпростіші ірраціональні вирази",
+    topic: "Тема 1. Повторення (7–9 клас)",
+    dovid: `
+      <h3>Арифметичний корінь n-го степеня</h3>
+      <p>√[n]{a} = b, якщо b ≥ 0 і bⁿ = a (для парних n).</p>
+      <h3>Властивості</h3>
+      <div class="formula">√(ab) = √a · √b ;  √(a/b) = √a / √b ;  (√a)² = a (a ≥ 0)</div>
+      <div class="formula">√(a²b) = |a| · √b</div>
+      <p><b>Звільнення від ірраціональності</b> — множення на спряжений вираз.</p>
+      <div class="source"><strong>Джерела:</strong> Мерзляк А. Г. та ін. Математика. 10 клас. § 2. — С. 13–18.</div>`,
+    razom: `
+      <div class="task"><div class="q">Завдання 1. Спростіть: √50 − √18.</div>
+        <details><summary>Показати розв'язок</summary><div class="solution">√50 = 5√2; √18 = 3√2; різниця = <b>2√2</b>.</div></details></div>
+      <div class="task"><div class="q">Завдання 2. Звільніться від ірраціональності: 6 / (√5 − √2).</div>
+        <details><summary>Показати розв'язок</summary><div class="solution">
+          6(√5 + √2) / ((√5)² − (√2)²) = 6(√5 + √2)/3 = <b>2(√5 + √2)</b>.
+        </div></details></div>
+      <div class="source"><strong>Джерела:</strong> Мерзляк А. Г. та ін. Математика. 10 клас. § 2, впр. 43–52.</div>`,
+    samo: `
+      <div class="task"><div class="q">1. Обчисліть: √72 + √32 − √98.</div></div>
+      <div class="task"><div class="q">2. Звільніться від ірраціональності: 3 / (√7 + 2).</div></div>
+      <div class="task"><div class="q">3. Спростіть: (√3 − √2)² + 2√6.</div></div>
+      <div class="source"><strong>Джерела:</strong> Мерзляк А. Г. та ін. Математика. 10 клас. § 2, впр. 53–60.</div>`
+  },
+  /* ---------- Далі уроки 4–48 можна додати аналогічно. ---------- */
+  4: {
+    title: "Розв'язування задач",
+    topic: "Тема 1. Повторення (7–9 клас)",
+    dovid: `
+      <h3>Алгоритм спрощення виразу</h3>
+      <ul><li>Визначити ОДЗ.</li><li>Виконати дії в дужках.</li><li>Застосувати формули.</li><li>Звести подібні доданки.</li><li>Перевірити на ОДЗ.</li></ul>
+      <div class="source"><strong>Джерела:</strong> Мерзляк А. Г. та ін. Математика. 10 клас. § 1–2 (узагальнення).</div>`,
+    razom: `
+      <div class="task"><div class="q">Спростіть: (x² − 9)/(x² + 6x + 9).</div>
+        <details><summary>Показати розв'язок</summary><div class="solution"><b>(x−3)/(x+3)</b>, x ≠ −3.</div></details></div>
+      <div class="task"><div class="q">Обчисліть: (√27 · √3)/√9.</div>
+        <details><summary>Показати розв'язок</summary><div class="solution"><b>3</b>.</div></details></div>
+      <div class="source"><strong>Джерела:</strong> Мерзляк А. Г. та ін. Математика. 10 клас. § 1–2, впр. 61–70.</div>`,
+    samo: `
+      <div class="task"><div class="q">1. Спростіть: (a² − 4)/(a² − 4a + 4).</div></div>
+      <div class="task"><div class="q">2. Обчисліть: √48/√3 + √12.</div></div>
+      <div class="source"><strong>Джерела:</strong> Мерзляк А. Г. та ін. Математика. 10 клас. § 1–2, впр. 71–78.</div>`
+  },
+  5: {
+    title: "Дробово-раціональні вирази",
+    topic: "Тема 1. Повторення (7–9 клас)",
+    dovid: `
+      <h3>Дії з дробами</h3>
+      <div class="formula">a/b · c/d = ac/(bd) ;  a/b : c/d = ad/(bc)</div>
+      <p>ОДЗ: знаменник ≠ 0. Скорочення — ділення на спільний множник.</p>
+      <div class="source"><strong>Джерела:</strong> Мерзляк А. Г. та ін. Математика. 10 клас. § 3. — С. 19–24.</div>`,
+    razom: `
+      <div class="task"><div class="q">Спростіть: (x² − 1)/x · x²/(x + 1).</div>
+        <details><summary>Показати розв'язок</summary><div class="solution"><b>x(x−1)</b>, x ≠ 0, x ≠ −1.</div></details></div>
+      <div class="task"><div class="q">Виконайте дії: 2/(x−3) − 1/(x+2).</div>
+        <details><summary>Показати розв'язок</summary><div class="solution"><b>(x + 7)/((x−3)(x+2))</b>.</div></details></div>
+      <div class="source"><strong>Джерела:</strong> Мерзляк А. Г. та ін. Математика. 10 клас. § 3, впр. 79–88.</div>`,
+    samo: `
+      <div class="task"><div class="q">1. Спростіть: (a² − b²)/(a + b) · 1/(a − b).</div></div>
+      <div class="task"><div class="q">2. Виконайте дії: 3/(x+1) + 2/(x−1).</div></div>
+      <div class="source"><strong>Джерела:</strong> Мерзляк А. Г. та ін. Математика. 10 клас. § 3, впр. 89–96.</div>`
+  },
+  /* Заглушка для уроків без окремого контенту */
+  _default: {
+    title: "Урок (контент у процесі наповнення)",
+    topic: "Інтерактивний посібник",
+    dovid: `<p>Матеріал цього уроку буде додано найближчим часом. Скористайтеся іншими уроками або зверніться до вчителя.</p>
+            <div class="source"><strong>Джерела:</strong> Мерзляк А. Г. та ін. Математика. 10 клас. — Гімназія, 2026.</div>`,
+    razom: `<div class="task"><div class="q">Завдання з'являться незабаром.</div></div>
+            <div class="source"><strong>Джерела:</strong> Мерзляк А. Г. та ін. Математика. 10 клас.</div>`,
+    samo: `<div class="task"><div class="q">Завдання для самопідготовки з'являться незабаром.</div></div>
+           <div class="source"><strong>Джерела:</strong> Мерзляк А. Г. та ін. Математика. 10 клас.</div>`
+  }
+};
+
+/* ------------------------- ЛОГІКА UI ------------------------- */
+
+/* 1) Розгортання тем */
+document.querySelectorAll('.topic').forEach(topic => {
+  const head = topic.querySelector('.topic-head');
+  const bar  = topic.querySelector('.topic-bar span');
+
+  head.addEventListener('click', () => {
+    topic.classList.toggle('open');
+    if (topic.classList.contains('open')) {
+      bar.style.width = '100%';
+    } else {
+      bar.style.width = '0';
+    }
+  });
+});
+
+/* 2) Відкриття уроку */
+const lessonView = document.getElementById('lessonView');
+const lessonCard = document.getElementById('lessonCard');
+const topicsBox  = document.getElementById('topics');
+const backBtn    = document.getElementById('backBtn');
+
+function openLesson(num, pushState = true) {
+  const data = LESSONS[num] || LESSONS._default;
+
+  lessonCard.innerHTML = `
+    <h2>Урок ${num}. ${data.title}</h2>
+    <span class="badge">${data.topic}</span>
+
+    <div class="tabs">
+      <button class="tab-btn active" data-tab="dovid">📖 Довідник-помічник</button>
+      <button class="tab-btn" data-tab="razom">🤝 Працюємо разом</button>
+      <button class="tab-btn" data-tab="samo">✍️ Завдання для самопідготовки</button>
+    </div>
+
+    <div class="tab-panel active" data-panel="dovid"><div class="panel">${data.dovid}</div></div>
+    <div class="tab-panel" data-panel="razom"><div class="panel">${data.razom}</div></div>
+    <div class="tab-panel" data-panel="samo"><div class="panel">${data.samo}</div></div>
+  `;
+
+  /* Вкладки */
+  lessonCard.querySelectorAll('.tab-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const key = btn.dataset.tab;
+      lessonCard.querySelectorAll('.tab-btn').forEach(b => b.classList.toggle('active', b === btn));
+      lessonCard.querySelectorAll('.tab-panel').forEach(p => p.classList.toggle('active', p.dataset.panel === key));
+    });
+  });
+
+  topicsBox.style.display = 'none';
+  lessonView.classList.add('active');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+
+  if (pushState) {
+    history.pushState({ lesson: num }, '', `#lesson-${num}`);
+  }
+}
+
+function closeLesson(pushState = true) {
+  lessonView.classList.remove('active');
+  topicsBox.style.display = '';
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+  if (pushState) history.pushState({}, '', '#');
+}
+
+/* Клік по уроку в темі */
+document.querySelectorAll('.lesson-link').forEach(link => {
+  link.addEventListener('click', e => {
+    e.preventDefault();
+    openLesson(link.dataset.lesson);
+  });
+});
+
+backBtn.addEventListener('click', () => closeLesson());
+
+/* Підтримка історії браузера */
+window.addEventListener('popstate', e => {
+  if (e.state && e.state.lesson) {
+    openLesson(e.state.lesson, false);
+  } else {
+    closeLesson(false);
+  }
+});
+
+/* Якщо сторінку відкрито з #lesson-N — показати одразу */
+(function initFromHash() {
+  const m = location.hash.match(/^#lesson-(\d+)$/);
+  if (m) openLesson(m[1], false);
+})();
+</script>
 </body>
 </html>
